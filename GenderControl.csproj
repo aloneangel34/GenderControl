@@ -36,7 +36,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\build\dlls\Assembly-CSharp.dll</HintPath>
+      <HintPath>build\dlls\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx">
@@ -98,5 +98,28 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="build\dlls\Assembly-CSharp.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>echo copy dll file to steam game
+setlocal
+if not exist "D:\SteamLibrary\steamapps\common\The Scroll Of Taiwu\BepInEx\plugins\GenderControl\" echo not copy file &amp;amp; goto END
+if %25errorlevel%25 neq 0 goto :cmEnd
+copy "$(TargetPATH)" "D:\SteamLibrary\steamapps\common\The Scroll Of Taiwu\BepInEx\plugins\GenderControl"
+if %25errorlevel%25 neq 0 goto :cmEnd
+echo "copy dll file GenderControl.dll ok"
+if %25errorlevel%25 neq 0 goto :cmEnd
+:END
+if %25errorlevel%25 neq 0 goto :cmEnd
+:cmEnd
+endlocal
+call :cmErrorLevel %25errorlevel%25
+goto :cmDone
+:cmErrorLevel
+exit /b %251
+:cmDone
+if %25errorlevel%25 neq 0 goto :VCEnd</PostBuildEvent>
+  </PropertyGroup>
 </Project>
