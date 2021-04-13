@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GameData;
 using HarmonyLib;
-using UnityEngine;
-using AI;
 
 namespace GenderControl
 {

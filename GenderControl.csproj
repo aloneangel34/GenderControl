@@ -77,25 +77,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GreenSkinDebugRecord.cs" />
-    <Compile Include="DisplayFaceColorHarmony.cs" />
-    <Compile Include="DisplayFaceColor.cs" />
-    <Compile Include="ObscureGenderNeedWorkingCheck\NeedWorkingCheckEventGetMarryOne.cs" />
-    <Compile Include="ObscureGenderNeedWorkingCheck\NoNeedFixInUpdateFace.cs" />
-    <Compile Include="ObscureGenderNeedWorkingCheck\NeedWorkingCheckMarriageCompetitionStory.cs" />
-    <Compile Include="NewActorMakeChildrenParentsFix.cs" />
-    <Compile Include="NewActorControl.cs" />
-    <Compile Include="NpcPassTurnCantChangeGangHarmony.cs" />
-    <Compile Include="ObscureGenderSupportHarmony.cs" />
-    <Compile Include="ObscureGenderHarmony.cs" />
-    <Compile Include="DebugReportForNewBirth.cs" />
-    <Compile Include="UnlockLevelGenderRequireHarmony.cs" />
-    <Compile Include="UnlockGangGenderRequireHarmony.cs" />
-    <Compile Include="UnlockLevelGenderRequire.cs" />
+    <Compile Include="GreenSkinDebugInfo\GreenSkinDebugRecord.cs" />
+    <Compile Include="ModFunctions\DisplayFaceColorHarmony.cs" />
+    <Compile Include="ModFunctions\DisplayFaceColor.cs" />
+    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckMatchmakingActorWindows.cs" />
+    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckMatchmakingOption.cs" />
+    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckEventGetMarryOne.cs" />
+    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NoNeedFixInUpdateFace.cs" />
+    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckMarriageCompetitionStory.cs" />
+    <Compile Include="ModFunctions\NewActorMakeChildrenParentsFix.cs" />
+    <Compile Include="ModFunctions\NewActorControl.cs" />
+    <Compile Include="ModFunctions\NpcPassTurnCantChangeGangHarmony.cs" />
+    <Compile Include="ModFunctions\ObscureGenderSupportHarmony.cs" />
+    <Compile Include="ModFunctions\ObscureGenderHarmony.cs" />
+    <Compile Include="GreenSkinDebugInfo\DebugReportForNewBirth.cs" />
+    <Compile Include="ModFunctions\UnlockLevelGenderRequireHarmony.cs" />
+    <Compile Include="ModFunctions\UnlockGangGenderRequireHarmony.cs" />
+    <Compile Include="ModFunctions\UnlockLevelGenderRequire.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="ObscureGenderNeedWorkingCheck\NeedWorkingNpcTurnChangeActions.cs" />
-    <Compile Include="ObscureGenderNeedWorkingCheck\NeedWorkingCheckEventTaiwuTryGetLover.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingNpcTurnChangeActions.cs" />
+    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckEventTaiwuTryGetLover.cs" />
+    <Compile Include="QuickLogger.cs" />
+    <None Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GameData;
 using HarmonyLib;
-using UnityEngine;
-using AI;
+using BepInEx.Logging;
 
 namespace GenderControl
 {
@@ -32,9 +30,7 @@ namespace GenderControl
             //调试信息
             if (Main.Setting.debugMode.Value)
             {
-                Main.SB.AppendFormat("AIChangeGong方法。actorId:{0} 试图从帮派:{1} 品阶:{2} 转投至 帮派:{3} 品阶:{4}。NPC过月行动中:{5} 原势力禁止脱离:{6}", actorId, DateFile.instance.GetGangDate(baseGongId, 0), baseGongLevel, DateFile.instance.GetGangDate(toGongId, 0), toGongLevel, NeedPacth, Settings.CantChangeGangIds.Contains(baseGongId));
-                Main.Logger.LogDebug(Main.SB);
-                Main.SB.Clear();
+                QuickLogger.Log(LogLevel.Info, "AIChangeGong方法。actorId:{0} 试图从帮派:{1} 品阶:{2} 转投至 帮派:{3} 品阶:{4}。NPC过月行动中:{5} 原势力禁止脱离:{6}", actorId, DateFile.instance.GetGangDate(baseGongId, 0), baseGongLevel, DateFile.instance.GetGangDate(toGongId, 0), toGongLevel, NeedPacth, Settings.CantChangeGangIds.Contains(baseGongId));
             }
 
             //若 处于过月行动中 且 禁止NPC脱离所属势力的列表中包含想脱离的势力
@@ -45,9 +41,7 @@ namespace GenderControl
                     //调试信息
                     if (Main.Setting.debugMode.Value)
                     {
-                        Main.SB.AppendFormat("已拦截 actorId:{0} 试图从帮派:{1} 品阶:{2} 转投至 帮派:{3} 品阶:{4} 的行为", actorId, DateFile.instance.GetGangDate(baseGongId, 0), baseGongLevel, DateFile.instance.GetGangDate(toGongId, 0), toGongLevel);
-                        Main.Logger.LogInfo(Main.SB);
-                        Main.SB.Clear();
+                        QuickLogger.Log(LogLevel.Info, "已拦截 actorId:{0} 试图从帮派:{1} 品阶:{2} 转投至 帮派:{3} 品阶:{4} 的行为", actorId, DateFile.instance.GetGangDate(baseGongId, 0), baseGongLevel, DateFile.instance.GetGangDate(toGongId, 0), toGongLevel);
                     }
 
                     return false;       //跳过原方法的执行（不进行变更）
@@ -57,12 +51,12 @@ namespace GenderControl
                     //调试信息
                     if (Main.Setting.debugMode.Value)
                     {
-                        Main.Logger.LogDebug("不属于禁止脱离势力，未拦截");
+                        Main.Logger.LogInfo("不属于禁止脱离势力，未拦截");
                     }
                 }
             }
 
             return true;            //继续执行原方法（NPC变更所属势力）
         }
-	}
+    }
 }

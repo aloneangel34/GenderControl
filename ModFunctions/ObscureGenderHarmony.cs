@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GameData;
 using HarmonyLib;
-using UnityEngine;
-using AI;
+using BepInEx.Logging;
 
 namespace GenderControl
 {
@@ -34,13 +33,13 @@ namespace GenderControl
             //若尝试获取的人物属性为“人物性别14”
             if (key == 14)
             {
+                #region 补丁应该没问题，有需要再启用调试
                 //调试信息
                 //if (Main.Setting.debugMode.Value)
                 //{
-                //    Main.SB.AppendFormat("性别模糊GetActorDate方法补丁 实际生效:{0} actorId:{1}，当前行动主动方ID:{2}。", NeedPacth, actorId, Settings.PatchActorID);
-                //    Main.Logger.LogDebug(Main.SB);
-                //    Main.SB.Clear();
+                //    QuickLogger.Log(LogLevel.Info, "性别模糊GetActorDate方法补丁 实际生效:{0} actorId:{1}，当前行动主动方ID:{2}。", NeedPacth, actorId, Settings.PatchActorID);
                 //}
+                #endregion
 
                 //若处于NPC过月行动的方法循环中，且要求获取的人物属性为“性别14”
                 if (NeedPacth)
@@ -48,26 +47,26 @@ namespace GenderControl
                     //如果人物ID为“正在设置过月行动的NPC”
                     if (Settings.PatchActorID == actorId)
                     {
+                        #region 补丁应该没问题，有需要再启用调试
                         //调试信息
                         //if (Main.Setting.debugMode.Value)
                         //{
-                        //    Main.SB.AppendFormat("actorId:{0} 模糊为男性 当前行动主动方ID:{1}。", actorId, Settings.PatchActorID);
-                        //    Main.Logger.LogDebug(Main.SB);
-                        //    Main.SB.Clear();
+                        //    QuickLogger.Log(LogLevel.Info, "actorId:{0} 模糊为男性 当前行动主动方ID:{1}。", actorId, Settings.PatchActorID);
                         //}
+                        #endregion
 
                         __result = "1";     //性别模糊为男性（不然女性NPC行动时，不会选择参加比武招亲）
                         return false;       //跳过原方法
                     }
                     else
                     {
+                        #region 补丁应该没问题，有需要再启用调试
                         //调试信息
                         //if (Main.Setting.debugMode.Value)
                         //{
-                        //    Main.SB.AppendFormat("actorId:{0} 模糊为女性 当前行动主动方ID:{1}。", actorId, Settings.PatchActorID);
-                        //    Main.Logger.LogDebug(Main.SB);
-                        //    Main.SB.Clear();
+                        //    QuickLogger.Log(LogLevel.Info, "actorId:{0} 模糊为女性 当前行动主动方ID:{1}。", actorId, Settings.PatchActorID);
                         //}
+                        #endregion
 
                         __result = "2";     //性别模糊为女性（这样“行动者”与“被互动方”互为异性。双方真实性别为同性也可以正常怀孕）
                         return false;       //跳过原方法
@@ -80,7 +79,7 @@ namespace GenderControl
                     //调试信息
                     if (Main.Setting.debugMode.Value)
                     {
-                        Main.Logger.LogInfo("参加比武招亲中，尝试为太吾模糊性别");
+                        Main.Logger.LogInfo("太吾参加比武招亲中，为太吾模糊性别");
                     }
 
                     __result = "1";     //性别模糊为男性（不然女性无法参加比武招亲时，不会选择参加比武招亲）

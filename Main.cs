@@ -23,7 +23,7 @@ namespace GenderControl
     public class Main : BaseUnityPlugin
     {
         /// <summary>插件版本</summary>
-        public const string Version = "0.1.1";
+        public const string Version = "0.1.2";
         /// <summary>插件名字</summary>
         public const string ModDisplayName = "GenderControl/性别操控";
         /// <summary>插件ID</summary>
@@ -55,7 +55,7 @@ namespace GenderControl
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogFatal("尝试加载补丁时出现异常");
+                    Logger.LogFatal("尝试加载Harmony补丁时出现异常");
                     Logger.LogFatal(ex);
                 }
             }
@@ -109,7 +109,7 @@ namespace GenderControl
                                 }
                                 catch (Exception ex)
                                 {
-                                    Logger.LogFatal("尝试加载补丁时出现异常");
+                                    Logger.LogFatal("尝试加载Harmony补丁时出现异常");
                                     Logger.LogFatal(ex);
                                 }
                             }
@@ -121,7 +121,7 @@ namespace GenderControl
                                 }
                                 catch (Exception ex)
                                 {
-                                    Logger.LogFatal("尝试卸载补丁时出现异常");
+                                    Logger.LogFatal("尝试卸载Harmony补丁时出现异常");
                                     Logger.LogFatal(ex);
                                 }
                             }
@@ -261,13 +261,13 @@ namespace GenderControl
                                     //【标签：模糊性别判定 说明】
                                     new TaiwuLabel()
                                     {
-                                        Text = "<color=#CCBB99>开启后可同性表白、可同性生子、不会因同性而产生流言蜚语。女性可参加比武招亲</color>",
+                                        Text = "<color=#CCBB99>同性表白、同性生子、无同性流言蜚语、同性男媒女妁。女性参加比武招亲</color>",
                                         Element = { PreferredSize = { 0, 50 } },
                                         UseOutline = true,
                                     },
                                 },
                             },
-                            //【水平UI组：门派、身份不限性别 开关】
+                            //【水平UI组：门派/身份不限性别 开关】
                             new Container()
                             {
                                 Name = "性别解禁UI组",
@@ -283,11 +283,11 @@ namespace GenderControl
                                 },
                                 Children =
                                 {
-                                    //【开关：门派、身份不限性别】
+                                    //【开关：门派/身份不限性别】
                                     new TaiwuToggle()
                                     {
                                         Name = "性别解禁开关",
-                                        Text = "门派身份不限性别",
+                                        Text = "门派/身份不限性别",
                                         isOn = Setting.unlockGangLevelGenderRequire.Value,
                                         onValueChanged = (bool value, Toggle tg) =>
                                         {
@@ -305,7 +305,7 @@ namespace GenderControl
                                         },
                                         Element = { PreferredSize = { 200 } }
                                     },
-                                    //【标签：门派不限性别 说明】
+                                    //【标签：门派/身份不限性别 说明】
                                     new TaiwuLabel()
                                     {
                                         Text = "<color=#CCBB99>开启性别锁时请同时开启此项！</color><color=#998877>不然因性别不符无法晋升高层，会产生掌门缺失现象。</color>",

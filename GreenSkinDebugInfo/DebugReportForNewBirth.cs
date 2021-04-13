@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GameData;
 using HarmonyLib;
-using UnityEngine;
-using AI;
+using BepInEx.Logging;
 
 namespace GenderControl
 {
@@ -41,9 +40,7 @@ namespace GenderControl
 
             if (Main.Setting.debugMode.Value)
             {
-                Main.SB.AppendFormat("【婴儿诞生开始记录】： fatherId:{0} motherId:{1}", fatherId, motherId);
-                Main.Logger.LogInfo(Main.SB.ToString());
-                Main.SB.Clear();
+                QuickLogger.Log(LogLevel.Debug, "【婴儿诞生开始记录】： fatherId:{0} motherId:{1}", fatherId, motherId);
             }
 
         }
@@ -57,7 +54,7 @@ namespace GenderControl
 
             if (Main.Setting.debugMode.Value)
             {
-                Main.Logger.LogInfo("婴儿诞生记录完成");
+                Main.Logger.LogDebug("婴儿诞生记录完成");
             }
 
         }
@@ -96,9 +93,7 @@ namespace GenderControl
         {
             if (ReportSwitchOnMakeNewChildren.IsSwitchOn == true && Main.Setting.debugMode.Value)
             {
-                Main.SB.AppendFormat("【婴儿数据建立前】： actorId:{0} baseActorId:{1} baseCharm:{2}", actorId, baseActorId, baseCharm);
-                Main.Logger.LogInfo(Main.SB.ToString());
-                Main.SB.Clear();
+                QuickLogger.Log(LogLevel.Debug, "【婴儿数据建立前】： actorId:{0} baseActorId:{1} baseCharm:{2}", actorId, baseActorId, baseCharm);
             }
         }
 
@@ -119,44 +114,44 @@ namespace GenderControl
                     ObscureGenderHarmony.NeedPacth = false;     //在本补丁内暂时禁用性别模糊
                 }
 
-                Main.Logger.LogInfo("【婴儿数据建立后，MOD修正前】尝试读取婴儿相关的数据：");
+                Main.Logger.LogDebug("【婴儿数据建立后，MOD修正前】尝试读取婴儿相关的数据：");
 
-                Main.Logger.LogInfo("presetActorDate是否为空:");
-                Main.Logger.LogInfo(__instance.presetActorDate == null);
-                Main.Logger.LogInfo("presetActorDate[baseActorId]是否为空:");
-                Main.Logger.LogInfo(__instance.presetActorDate[baseActorId] == null);
-                Main.Logger.LogInfo("presetActorDate[baseActorId][8]是否为空:");
-                Main.Logger.LogInfo(__instance.presetActorDate[baseActorId][8] == null);
-                Main.Logger.LogInfo("presetActorDate[baseActorId][8]数据:");
-                Main.Logger.LogInfo(__instance.presetActorDate[baseActorId][8]);
-                Main.Logger.LogInfo("presetActorDate[baseActorId][2]是否为空:");
-                Main.Logger.LogInfo(__instance.presetActorDate[baseActorId][2] == null);
-                Main.Logger.LogInfo("presetActorDate[baseActorId][2]数据:");
-                Main.Logger.LogInfo(__instance.presetActorDate[baseActorId][2]);
-                Main.Logger.LogInfo("actorId魅力值（无修正）");
-                Main.Logger.LogInfo(__instance.GetActorDate(actorId, 15, false));
-                Main.Logger.LogInfo("actorId魅力值（有修正）");
-                Main.Logger.LogInfo(__instance.GetActorDate(actorId, 15, true));
-                Main.Logger.LogInfo("actorId性别");
-                Main.Logger.LogInfo(__instance.GetActorDate(actorId, 14, false));
-                Main.Logger.LogInfo("actorId出家");
-                Main.Logger.LogInfo(__instance.GetActorDate(actorId, 2, false));
+                Main.Logger.LogDebug("presetActorDate是否为空:");
+                Main.Logger.LogDebug(__instance.presetActorDate == null);
+                Main.Logger.LogDebug("presetActorDate[baseActorId]是否为空:");
+                Main.Logger.LogDebug(__instance.presetActorDate[baseActorId] == null);
+                Main.Logger.LogDebug("presetActorDate[baseActorId][8]是否为空:");
+                Main.Logger.LogDebug(__instance.presetActorDate[baseActorId][8] == null);
+                Main.Logger.LogDebug("presetActorDate[baseActorId][8]数据:");
+                Main.Logger.LogDebug(__instance.presetActorDate[baseActorId][8]);
+                Main.Logger.LogDebug("presetActorDate[baseActorId][2]是否为空:");
+                Main.Logger.LogDebug(__instance.presetActorDate[baseActorId][2] == null);
+                Main.Logger.LogDebug("presetActorDate[baseActorId][2]数据:");
+                Main.Logger.LogDebug(__instance.presetActorDate[baseActorId][2]);
+                Main.Logger.LogDebug("actorId魅力值（无修正）");
+                Main.Logger.LogDebug(__instance.GetActorDate(actorId, 15, false));
+                Main.Logger.LogDebug("actorId魅力值（有修正）");
+                Main.Logger.LogDebug(__instance.GetActorDate(actorId, 15, true));
+                Main.Logger.LogDebug("actorId性别");
+                Main.Logger.LogDebug(__instance.GetActorDate(actorId, 14, false));
+                Main.Logger.LogDebug("actorId出家");
+                Main.Logger.LogDebug(__instance.GetActorDate(actorId, 2, false));
 
-                Main.Logger.LogInfo("要写入的项");
-                Main.Logger.LogInfo("CharProperty14数据:");
-                Main.Logger.LogInfo(Characters.GetCharProperty(actorId, 14));
-                Main.Logger.LogInfo("CharProperty997数据:");
-                Main.Logger.LogInfo(Characters.GetCharProperty(actorId, 997));
-                Main.Logger.LogInfo("CharProperty17数据:");
-                Main.Logger.LogInfo(Characters.GetCharProperty(actorId, 17));
-                Main.Logger.LogInfo("CharProperty21数据:");
-                Main.Logger.LogInfo(Characters.GetCharProperty(actorId, 21));
-                Main.Logger.LogInfo("CharProperty15数据:");
-                Main.Logger.LogInfo(Characters.GetCharProperty(actorId, 15));
-                Main.Logger.LogInfo("CharProperty995数据:");
-                Main.Logger.LogInfo(Characters.GetCharProperty(actorId, 995));
+                Main.Logger.LogDebug("要写入的项");
+                Main.Logger.LogDebug("CharProperty14数据:");
+                Main.Logger.LogDebug(Characters.GetCharProperty(actorId, 14));
+                Main.Logger.LogDebug("CharProperty997数据:");
+                Main.Logger.LogDebug(Characters.GetCharProperty(actorId, 997));
+                Main.Logger.LogDebug("CharProperty17数据:");
+                Main.Logger.LogDebug(Characters.GetCharProperty(actorId, 17));
+                Main.Logger.LogDebug("CharProperty21数据:");
+                Main.Logger.LogDebug(Characters.GetCharProperty(actorId, 21));
+                Main.Logger.LogDebug("CharProperty15数据:");
+                Main.Logger.LogDebug(Characters.GetCharProperty(actorId, 15));
+                Main.Logger.LogDebug("CharProperty995数据:");
+                Main.Logger.LogDebug(Characters.GetCharProperty(actorId, 995));
 
-                Main.Logger.LogInfo("输出完成，进入实际补丁");
+                Main.Logger.LogDebug("输出完成，进入实际补丁");
 
                 //若在补丁开始时暂时禁用了性别模糊
                 if (selfAntiGenderObscure)

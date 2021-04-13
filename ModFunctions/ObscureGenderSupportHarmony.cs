@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GameData;
 using HarmonyLib;
-using UnityEngine;
-using AI;
+using BepInEx.Logging;
 
 namespace GenderControl
 {
@@ -21,27 +20,24 @@ namespace GenderControl
         /// </summary>
         /// <param name="__result">原方法的返回的人物特性列表</param>
         /// <param name="key">人物ID</param>
-        /// <returns>该补丁执行完后是否继续执行原方法</returns>
         [HarmonyPostfix]
         private static void GetActorFeaturePostfix(ref List<int> __result, int key)
         //原方法的签名（参照用）
-        //public List<int> GetActorFeature(int key, bool getAll = false)  //原方法的声明，用于对照
+        //public List<int> GetActorFeature(int key, bool getAll = false)
         {
-
-            //性别模糊实际生效时，对传回的无法生育特性做修正
+            //性别模糊实际生效时，对原方法返回的特性列表中的【无法生育特性】做修正
             if (ObscureGenderHarmony.NeedPacth)
             {
                 //如果人物ID为“正在设置过月行动的NPC” 且人物有“石芯玉女1002”特性
                 if (Settings.PatchActorID == key && __result.Contains(1002))
                 {
-
+                    #region 补丁应该没问题，有需要再启用调试
                     //调试信息
                     //if (Main.Setting.debugMode.Value)
                     //{
-                    //    Main.SB.AppendFormat("特性读取修正 actorId:{0} 主行动者ID:{1} 原列表含：无根之人{2}、石芯玉女{3}", key, Settings.PatchActorID, __result.Contains(1001), __result.Contains(1002));
-                    //    Main.Logger.LogInfo(Main.SB);
-                    //    Main.SB.Clear();
+                    //    QuickLogger.Log(LogLevel.Info, "特性读取修正 actorId:{0} 主行动者ID:{1} 原列表含：无根之人{2}、石芯玉女{3}", key, Settings.PatchActorID, __result.Contains(1001), __result.Contains(1002));
                     //}
+                    #endregion
 
                     __result.Remove(1002);  //返回的列表中移除“石芯玉女1002”
                     __result.Add(1001);     //返回的列表中添加“无根之人1001”
@@ -51,13 +47,13 @@ namespace GenderControl
                 //如果人物ID属于“正在设置过月行动NPC”的“同格人物” 且人物有“无根之人1001”特性
                 else if (Settings.PatchActorID != key && __result.Contains(1001))
                 {
+                    #region 补丁应该没问题，有需要再启用调试
                     //调试信息
                     //if (Main.Setting.debugMode.Value)
                     //{
-                    //    Main.SB.AppendFormat("特性读取修正 actorId:{0} 主行动者ID:{1} 原列表含：无根之人{2}、石芯玉女{3}", key, Settings.PatchActorID, __result.Contains(1001), __result.Contains(1002));
-                    //    Main.Logger.LogInfo(Main.SB);
-                    //    Main.SB.Clear();
+                    //    QuickLogger.Log(LogLevel.Info, "特性读取修正 actorId:{0} 主行动者ID:{1} 原列表含：无根之人{2}、石芯玉女{3}", key, Settings.PatchActorID, __result.Contains(1001), __result.Contains(1002));
                     //}
+                    #endregion
 
                     __result.Remove(1001);  //返回的列表中移除“无根之人1001”
                     __result.Add(1002);     //返回的列表中添加“石芯玉女1002”

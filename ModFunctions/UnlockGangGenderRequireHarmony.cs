@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GameData;
 using HarmonyLib;
-using UnityEngine;
-using AI;
+using BepInEx.Logging;
 
 namespace GenderControl
 {
@@ -30,15 +29,15 @@ namespace GenderControl
             //若要求获取的势力数据为“门派性别要求5”
             if (index == 5)
             {
+                #region 补丁应该没问题，有需要再启用调试
                 //调试信息
                 //if (Main.Setting.debugMode.Value)
                 //{
-                //    Main.SB.AppendFormat("模糊门派性别限制GetGangDate方法 启用:{0} 门派ID:{1}", Main.Setting.unlockGangLevelGenderRequire.Value, id);
-                //    Main.Logger.LogDebug(Main.SB);
-                //    Main.SB.Clear();
+                //    QuickLogger.Log(LogLevel.Info, "模糊门派性别限制GetGangDate方法 启用:{0} 门派ID:{1}", Main.Setting.unlockGangLevelGenderRequire.Value, id);
                 //}
+                #endregion
 
-                //代替原方法返回数值，让游戏认为该门派对性别无限制，
+                //若开启【代替原方法返回数值，让游戏认为该门派对性别无限制】
                 if (Main.Setting.unlockGangLevelGenderRequire.Value)
                 {
                     __result = "0";     //将返回值（门派性别要求）模糊为“无要求0”

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GameData;
 using HarmonyLib;
 using UnityEngine;
+using BepInEx.Logging;
 
 namespace GenderControl
 {
@@ -67,7 +68,7 @@ namespace GenderControl
         };
 
         /// <summary>
-        /// 改变DateFile中保存的faceColor[0]的赋值
+        /// 改变DateFile中保存的faceColor[0]（游戏的显示肤色）的赋值
         /// </summary>
         /// <param name="colorsId">色号 0为原版，1为较浅，2为较深，其他无效</param>
         public static void ChangeDisplayColor(int colorsId)
@@ -92,10 +93,10 @@ namespace GenderControl
                         //调试信息
                         if (Main.Setting.debugMode.Value)
                         {
-                            Main.SB.AppendFormat("显示肤色设定值{0}无效（0原版、1较深、2较浅），变更失败", colorsId);
-                            Main.Logger.LogError(Main.SB.ToString());
-                            Main.SB.Clear();
+                            QuickLogger.Log(LogLevel.Warning, "显示肤色设定值{0}无效（0 原版、1 较深、2 较浅），重设为游戏原本肤色", colorsId);
                         }
+                        Main.Setting.displayFaceColors.Value = 0;
+                        DateFile.instance.faceColor[0] = _defalutColors;
                         break;
                 }
             }
@@ -109,6 +110,7 @@ namespace GenderControl
             }
         }
 
+        #region 弃用的色号组
 
         ///// <summary>
         ///// 较浅的显示肤色
@@ -126,6 +128,7 @@ namespace GenderControl
         //    new Color(215f / 255f, 136f / 255f, 80f / 255f),
         //    new Color(210f / 255f, 125f / 255f, 71f / 255f)
         //};
+        #endregion
 
     }
 }

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GameData;
 using HarmonyLib;
-using UnityEngine;
+using BepInEx.Logging;
 
 namespace GenderControl
 {
@@ -32,9 +31,7 @@ namespace GenderControl
                 //调试信息
                 if (Main.Setting.debugMode.Value)
                 {
-                    Main.SB.AppendFormat("游戏调用GetFaceColor方法。已尝试自动变更肤色显示为{0}（0原版、1较深、2较浅）", Main.Setting.displayFaceColors.Value);
-                    Main.Logger.LogInfo(Main.SB.ToString());
-                    Main.SB.Clear();
+                    QuickLogger.Log(LogLevel.Info, "游戏调用GetFaceColor方法。已尝试自动变更肤色显示为{0}（0原版、1较深、2较浅）", Main.Setting.displayFaceColors.Value);
                 }
             }
         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GameData;
 using HarmonyLib;
 
 namespace GenderControl
@@ -14,6 +13,7 @@ namespace GenderControl
     [HarmonyPatch(typeof(PeopleLifeAI), "DoTrunAIChange")]
     public static class NeedWorkingNpcTurnChangeActions
     {
+        #region 弃用的模拟全局变量的静态字段
         /// <summary>
         /// 地格中的NPC是否全都行动过了（即本次调用为新地格）
         /// </summary>
@@ -22,9 +22,10 @@ namespace GenderControl
         /// 当前地格未行动NPC列表
         /// </summary>
         //static List<int> _unActChars = new List<int>();
+        #endregion
 
         /// <summary>
-        /// NPC过月行动调用前，开启部分HarmonyPatch的实际运行
+        /// NPC过月行动调用前，开启【性别模糊】与【禁止NPC脱离指定势力】的实际运行
         /// </summary>
         /// <param name="__instance">原方法所属的实例</param>
         /// <param name="__result">人物死于天灾的几率（原方法的返回值）</param>
@@ -37,19 +38,20 @@ namespace GenderControl
         /// <param name="mainActorItems"></param>
         /// <param name="aliveChars">人物所在地格中，活着的人物列表</param>
         /// <param name="deadChars">人物所在地格中，死去的人物列表</param>
-        /// <returns>是否执行原方法（本补丁为false，即不再执行）</returns>
         [HarmonyPrefix]
-        private static void Prefix(PeopleLifeAI __instance, int actorId, int mapId, int tileId, int mainActorId, int[] aliveChars)
+        private static void DoTrunAIChangePrefix(int actorId, int[] aliveChars)
+        //private static void Prefix(int actorId, int mapId, int tileId, int[] aliveChars)
         //原方法的签名（参照用）
         //private int DoTrunAIChange(int actorId, int mapId, int tileId, int mainActorId, bool isTaiwuAtThisTile, int worldId, Dictionary<int, List<int>> mainActorItems, int[] aliveChars, int[] deadChars)    //原方法的声明，用于对照
         {
-            Settings.PatchActorID = actorId;                    //记录本次调用中的行为主动方的人物ID
+            Settings.PatchActorID = actorId;                        //记录本次调用中的行为主动方的人物ID
 
             ObscureGenderHarmony.NeedPacth = true;                //将需要补丁设为是（性别模糊）
             NpcPassTurnCantChangeGangHarmony.NeedPacth = true;    //将需要补丁设为是（势力变更拦截）
 
 
             #region 本来加判断是为了减轻运行负担的（但由于并没有实际采用最初设想的加载/卸载Patch，而只是改了Patch运行中的参数、Patch一直加载着。所以可以省略了）
+            //另外想了想，有没有轮到下一个地块，不是直接比对原方法传入的 mapId 和 tileId 更快吗？我真傻
 
             ////调试信息
             //if (Main.Setting.debugMode.Value)
@@ -74,22 +76,11 @@ namespace GenderControl
         }
 
         /// <summary>
-        /// NPC过月行动调用后，关闭部分HarmonyPatch的实际运行
+        /// NPC过月行动调用后，关闭【性别模糊】与【禁止NPC脱离指定势力】的实际运行
         /// </summary>
-        /// <param name="__instance">原方法所属的实例</param>
-        /// <param name="__result">人物死于天灾的几率（原方法的返回值）</param>
-        /// <param name="actorId">人物ID</param>
-        /// <param name="mapId">大地图位置</param>
-        /// <param name="tileId">小地图位置</param>
-        /// <param name="mainActorId">太吾的人物ID</param>
-        /// <param name="isTaiwuAtThisTile">人物是否和太吾处于同一格</param>
-        /// <param name="worldId">世界地图ID（哪个省）</param>
-        /// <param name="mainActorItems"></param>
-        /// <param name="aliveChars">人物所在地格中，活着的人物列表</param>
-        /// <param name="deadChars">人物所在地格中，死去的人物列表</param>
-        /// <returns>是否执行原方法（本补丁为false，即不再执行）</returns>
         [HarmonyPostfix]
-        private static void Postfix(PeopleLifeAI __instance, int actorId, int mainActorId, int[] aliveChars)
+        private static void DoTrunAIChangePostfix()
+        //private static void Postfix(PeopleLifeAI __instance, int actorId, int mainActorId, int[] aliveChars)
         //原方法的签名（参照用）
         //private int DoTrunAIChange(int actorId, int mapId, int tileId, int mainActorId, bool isTaiwuAtThisTile, int worldId, Dictionary<int, List<int>> mainActorItems, int[] aliveChars, int[] deadChars)
         {

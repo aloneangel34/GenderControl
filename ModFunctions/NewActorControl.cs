@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GameData;
 using HarmonyLib;
 using UnityEngine;
+using BepInEx.Logging;
 
 namespace GenderControl
 {
@@ -59,14 +60,13 @@ namespace GenderControl
                 //调试信息
                 //if (Main.Setting.debugMode.Value)
                 //{
-                //    Main.SB.AppendFormat("actorId:{0} baseActorId:{1} 魅力:{2} 加成魅力:{3} 性别:{4} 出家:{5}", actorId, baseActorId, __instance.GetActorDate(actorId, 15, false), __instance.GetActorDate(actorId, 15, true), __instance.GetActorDate(actorId, 14, false), __instance.GetActorDate(actorId, 2, false));
-                //    Main.Logger.LogDebug(Main.SB.ToString());
-                //    Main.SB.Clear();
+                //    QuickLogger.Log(LogLevel.Info, "actorId:{0} baseActorId:{1} 魅力:{2} 加成魅力:{3} 性别:{4} 出家:{5}", actorId, baseActorId, __instance.GetActorDate(actorId, 15, false), __instance.GetActorDate(actorId, 15, true), __instance.GetActorDate(actorId, 14, false), __instance.GetActorDate(actorId, 2, false));
                 //}
 
-                //查了查生生世世，发现不需要特殊处理
+                #region 查了查生生世世，发现不需要特殊处理
                 //若 性别锁已启用 且 （未启用性别锁定排除转世 或 转世信息中不含人物母方），【进行进一步性别锁判定】
                 //if (Main.Setting.newActorGenderLock.Value != 0 && (!Main.Setting.newActorGenderLockExcludeSamsara.Value || !DateFile.instance.samsaraPlatformChildrenData.ContainsKey(motherId)))
+                #endregion
 
                 //若 性别锁已启用（且有合法值）
                 if (Main.Setting.newActorGenderLock.Value == 1 || Main.Setting.newActorGenderLock.Value == 2)
@@ -94,9 +94,7 @@ namespace GenderControl
                                 //调试信息
                                 //if (Main.Setting.debugMode.Value)
                                 //{
-                                //    Main.SB.AppendFormat("actorId:{0} baseActorId变为:{1} 原性别:{2}", actorId, baseActorId, gender);
-                                //    Main.Logger.LogInfo(Main.SB.ToString());
-                                //    Main.SB.Clear();
+                                //    QuickLogger.Log(LogLevel.Info, "actorId:{0} baseActorId变为:{1} 原性别:{2}", actorId, baseActorId, gender);
                                 //}
                             }
 
@@ -107,9 +105,7 @@ namespace GenderControl
                                 //调试信息
                                 //if (Main.Setting.debugMode.Value)
                                 //{
-                                //    Main.SB.AppendFormat("actorId:{0} 原性别:{1} 原有无根之人:{2} 原有石芯玉女:{3} 特性将按照新性别修正", actorId, gender, __instance.GetActorFeature(actorId, false).Contains(1001), __instance.GetActorFeature(actorId, false).Contains(1002));
-                                //    Main.Logger.LogInfo(Main.SB.ToString());
-                                //    Main.SB.Clear();
+                                //    QuickLogger.Log(LogLevel.Info, "actorId:{0} 原性别:{1} 原有无根之人:{2} 原有石芯玉女:{3} 特性将按照新性别修正", actorId, gender, __instance.GetActorFeature(actorId, false).Contains(1001), __instance.GetActorFeature(actorId, false).Contains(1002));
                                 //}
 
                                 DateFile.instance.ChangeActorFeature(actorId, (gender == 1 ? 1001 : 1002), (gender == 1 ? 1002 : 1001));
@@ -122,13 +118,10 @@ namespace GenderControl
                         //性别直接按设定值重设
                         Characters.SetCharProperty(actorId, 14, Main.Setting.newActorGenderLock.Value.ToString());
 
-                        //TODO 魅力上升值
                         //调试信息
                         //if (Main.Setting.debugMode.Value)
                         //{
-                        //    Main.SB.AppendFormat("actorId:{0} 未获取到有效性别，按MOD设置设为:{1}", actorId, Main.Setting.newActorGenderLock.Value);
-                        //    Main.Logger.LogError(Main.SB.ToString());
-                        //    Main.SB.Clear();
+                        //    QuickLogger.Log(LogLevel.Warning, "actorId:{0} 未获取到有效性别，按MOD设置设为:{1}", actorId, Main.Setting.newActorGenderLock.Value);
                         //}
                     }
                 }
@@ -163,9 +156,7 @@ namespace GenderControl
                         //调试信息
                         if (Main.Setting.debugMode.Value)
                         {
-                            Main.SB.AppendFormat("actorId:{0} 原魅力:{1} 魅力上升值:{2} （终值最高900） ", actorId, charm, charmUpValue);
-                            Main.Logger.LogDebug(Main.SB.ToString());
-                            Main.SB.Clear();
+                            QuickLogger.Log(LogLevel.Info, "actorId:{0} 原魅力:{1} 魅力上升值:{2} （终值最高900） ", actorId, charm, charmUpValue);
                         }
 
                         //魅力上调（上限为900，下限为原数值。防止出错）
@@ -174,8 +165,6 @@ namespace GenderControl
                         Characters.SetCharProperty(actorId, 15, charm.ToString());
                         //以新魅力来重新随机设定人物面容（如果是生下来的孩子、有继承样貌的话，baseCharm应该不会为-1。若真有、以后再修正）
                         __instance.RandActorFace(actorId, charm, -1);
-
-
 
                         //若新人物的出家属性不为0，要将面容变更后的发型再设定一下
                         if (int.TryParse(__instance.presetActorDate[baseActorId][2], out int n) && n != 0)

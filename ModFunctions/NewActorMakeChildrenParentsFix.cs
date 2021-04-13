@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GameData;
 using HarmonyLib;
-using UnityEngine;
+using BepInEx.Logging;
 
 namespace GenderControl
 {
@@ -45,9 +44,7 @@ namespace GenderControl
                 //调试信息
                 if (Main.Setting.debugMode.Value)
                 {
-                    Main.SB.AppendFormat("MakeChildren方法、检测到传入父母双方ID相同:{0} 关系:{1} 关系对应人数:{2} 地区ID:{3} 地格ID:{4}", fatherId, socialTyp, maybeMotherIds.Count, partId, placeId);
-                    Main.Logger.LogInfo(Main.SB);
-                    Main.SB.Clear();
+                    QuickLogger.Log(LogLevel.Info, "MakeChildren方法、检测到传入父母双方ID相同:{0} 关系:{1} 关系对应人数:{2} 地区ID:{3} 地格ID:{4}", fatherId, socialTyp, maybeMotherIds.Count, partId, placeId);
                 }
 
                 //遍历该列表，将其中不在传入地点的人物排除
@@ -73,17 +70,13 @@ namespace GenderControl
                     //调试信息
                     if (Main.Setting.debugMode.Value)
                     {
-                        Main.SB.AppendFormat("修复成功，指定actorId:{0}为母方 符合条件的总人数:{1}", motherId, maybeMotherIds.Count);
-                        Main.Logger.LogInfo(Main.SB);
-                        Main.SB.Clear();
+                        QuickLogger.Log(LogLevel.Info, "修复成功，指定actorId:{0}为母方 符合条件的总人数:{1}", motherId, maybeMotherIds.Count);
                     }
                 }
                 //尝试修正的可选列表为空，调试信息
                 else if (Main.Setting.debugMode.Value)
                 {
-                    Main.SB.AppendFormat("为MakeChildren方法修复“父母双方ID相同”失败，未能为actorId:{0} 在关系:{1}、地区:{2}、地格:{3} 找到可能的另一方 ", fatherId, socialTyp, partId, placeId);
-                    Main.Logger.LogError(Main.SB);
-                    Main.SB.Clear();
+                    QuickLogger.Log(LogLevel.Error, "为MakeChildren方法修复“父母双方ID相同”失败，未能为actorId:{0} 在关系:{1}、地区:{2}、地格:{3} 找到可能的另一方 ", fatherId, socialTyp, partId, placeId);
                 }
             }
         }

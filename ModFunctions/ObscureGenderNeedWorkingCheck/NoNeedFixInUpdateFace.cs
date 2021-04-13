@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GameData;
 using HarmonyLib;
-using UnityEngine;
-using AI;
+using BepInEx.Logging;
 
 namespace GenderControl
 {
     /// <summary>
     /// 性别模糊不适宜启用、因此需要修正的场合：更新立绘
     /// </summary>
+    //因为目标方法有重载，所以需要输入目标方法的参数类型的数组、来帮助Harmony识别具体要Patch的方法
     [HarmonyPatch(typeof(ActorFace), "UpdateFace", new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(int[]), typeof(int[]), typeof(int), typeof(bool), typeof(bool) })]
     public static class NeedFixInUpdateFace
     {
@@ -37,7 +32,7 @@ namespace GenderControl
             //若调用该方法时，性别模糊已开启 且 该人物ID不为 -1 （即传入人物的性别有可能有误、且并非是设置界面在调用该方法时）
             if (ObscureGenderHarmony.NeedPacth == true && actorId != -1)
             {
-                ObscureGenderHarmony.NeedPacth = false;         //修正传入的性别前，暂时关闭性别模糊
+                ObscureGenderHarmony.NeedPacth = false;         //修正性别前，暂时关闭性别模糊
 
                 //若获得了有效的人物性别，【将传入的性别修正为人物有效的性别】【无效则不处理】
                 if (int.TryParse(DateFile.instance.GetActorDate(actorId, 14, false), out int n) && (n == 1 || n == 2))
@@ -47,12 +42,10 @@ namespace GenderControl
                 //调试信息
                 else if (Main.Setting.debugMode.Value)
                 {
-                    Main.SB.AppendFormat("在UpdateFace方法的性别修正中，无法获取actorId:{0} 的有效性别，未做修正", actorId);
-                    Main.Logger.LogError(Main.SB.ToString());
-                    Main.SB.Clear();
+                    QuickLogger.Log(LogLevel.Error, "在UpdateFace方法的性别修正中，无法获取actorId:{0} 的有效性别，未做修正", actorId);
                 }
 
-                ObscureGenderHarmony.NeedPacth = true;          //修正传入的性别后，恢复启用性别模糊
+                ObscureGenderHarmony.NeedPacth = true;          //修正性别后，恢复启用性别模糊
             }
         }
     }

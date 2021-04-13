@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GameData;
 using HarmonyLib;
-using UnityEngine;
-using AI;
 
 namespace GenderControl
 {
     /// <summary>
-    /// 部分HarmonyPatch，何时需要实际运行的判断（玩家部分 —— 比武招亲奇遇的奇遇）
+    /// 性别模糊启用时机补充：玩家部分参加比武招亲奇遇
     /// </summary>
     /// 附注：女性NPC参加比武招亲的判断部分，已被包含在NPC过月行动里
     [HarmonyPatch(typeof(StorySystem), "StoryStartEvent")]
@@ -23,9 +20,9 @@ namespace GenderControl
         /// <param name="__instance">原方法所属的实例</param>
         /// <param name="waitTime">等待时间</param>
         /// <param name="startEventId">开始的EventId</param>
+        /// <param name="__state">传给后置补丁的记录参数</param>
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(StorySystem), "StoryStartEvent")]
-        private static void StoryStartEventPrefix(StorySystem __instance, int startEventId, out bool __state)
+        private static void StoryStartEventPrefix(int startEventId, out bool __state)
         //原方法的签名（参照用）
         //private IEnumerator StoryStartEvent(float waitTime, int startEventId)
         {
@@ -42,11 +39,9 @@ namespace GenderControl
         /// <summary>
         /// 进入比武招亲调用后，关闭性别模糊
         /// </summary>
-        /// <param name="__instance">原方法所属的实例</param>
-        /// <param name="waitTime">等待时间</param>
-        /// <param name="startEventId">开始的EventId</param>
+        /// <param name="__state">前置补丁传过来的记录参数</param>
         [HarmonyPostfix]
-        private static void StoryStartEventPostfix(StorySystem __instance, bool __state)
+        private static void StoryStartEventPostfix(bool __state)
         //原方法的签名（参照用）
         //private IEnumerator StoryStartEvent(float waitTime, int startEventId)
         {

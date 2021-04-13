@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GameData;
-using HarmonyLib;
-using UnityEngine;
-using AI;
+using BepInEx.Logging;
 
 namespace GenderControl
 {
     /// <summary>
-    /// 功能：解除身份对性别要求的限制（手动记录还原）
+    /// 功能：解除身份对性别要求的限制（重写/还原presetGangGroupDateValue[101]数据）
     /// </summary>
     public static class UnlockLevelGenderRequire
     {
@@ -30,9 +27,7 @@ namespace GenderControl
                 //调试信息
                 if (Main.Setting.debugMode.Value)
                 {
-                    Main.SB.AppendFormat("解禁身份性别：重设presetGangGroupDateValue[101] 还原记录条目数:{0} 实际条目数:{1}", RecordLevelGenderRequir.Count, DateFile.instance.presetGangGroupDateValue.Count);
-                    Main.Logger.LogInfo(Main.SB);
-                    Main.SB.Clear();
+                    QuickLogger.Log(LogLevel.Info, "解禁身份性别：重设presetGangGroupDateValue[101] 还原记录条目数:{0} 实际条目数:{1}", RecordLevelGenderRequir.Count, DateFile.instance.presetGangGroupDateValue.Count);
                 }
 
                 //若记录为空，【先保存记录】
@@ -46,9 +41,7 @@ namespace GenderControl
                     //调试信息
                     if (Main.Setting.debugMode.Value)
                     {
-                        Main.SB.AppendFormat("已备份原“身份要求性别”数据 记录条目数:{0} 实际条目数:{1}", RecordLevelGenderRequir.Count, DateFile.instance.presetGangGroupDateValue.Count);
-                        Main.Logger.LogInfo(Main.SB);
-                        Main.SB.Clear();
+                        QuickLogger.Log(LogLevel.Debug, "已备份原“身份要求性别”数据 记录条目数:{0} 实际条目数:{1}", RecordLevelGenderRequir.Count, DateFile.instance.presetGangGroupDateValue.Count);
                     }
                 }
 
@@ -65,7 +58,7 @@ namespace GenderControl
         }
 
         /// <summary>
-        /// 尝试以记录下的元数据，还原“身份要求性别101”的值
+        /// 尝试以记录里的元数据，还原“身份要求性别101”的值
         /// </summary>
         public static void UndoResetLevelGender()
         {
@@ -75,9 +68,7 @@ namespace GenderControl
                 //调试信息
                 if (Main.Setting.debugMode.Value)
                 {
-                    Main.SB.AppendFormat("解禁身份性别：尝试还原presetGangGroupDateValue[101]。还原用记录的条目数：{0},实际presetGangGroupDateValue条目数：{0}", RecordLevelGenderRequir.Count, DateFile.instance.presetGangGroupDateValue.Count);
-                    Main.Logger.LogInfo(Main.SB);
-                    Main.SB.Clear();
+                    QuickLogger.Log(LogLevel.Info, "解禁身份性别：尝试还原presetGangGroupDateValue[101]。还原用记录的条目数：{0},实际presetGangGroupDateValue条目数：{0}", RecordLevelGenderRequir.Count, DateFile.instance.presetGangGroupDateValue.Count);
                 }
 
                 //如果记录不为空，以记录来还原数据（若虽然字典条目不为空，但某个条目的值为空，则以字符串“0”代替）
@@ -91,7 +82,7 @@ namespace GenderControl
             }
             else if (Main.Setting.debugMode.Value)
             {
-                Main.Logger.LogInfo("解禁身份性别：尝试还原presetGangGroupDateValue[101]时失败，DateFile实例不存在");
+                Main.Logger.LogError("解禁身份性别：尝试还原presetGangGroupDateValue[101]时失败，DateFile实例不存在");
             }
         }
 
