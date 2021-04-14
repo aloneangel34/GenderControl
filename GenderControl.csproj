@@ -35,8 +35,8 @@
       <HintPath>D:\SteamLibrary\steamapps\common\The Scroll Of Taiwu\BepInEx\core\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>build\dlls\Assembly-CSharp.dll</HintPath>
+    <Reference Include="Assembly-CSharp0284">
+      <HintPath>..\LibDlls\Assembly-CSharp0284.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx">
@@ -77,32 +77,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GreenSkinDebugInfo\GreenSkinDebugRecord.cs" />
-    <Compile Include="ModFunctions\DisplayFaceColorHarmony.cs" />
-    <Compile Include="ModFunctions\DisplayFaceColor.cs" />
-    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckMatchmakingActorWindows.cs" />
-    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckMatchmakingOption.cs" />
-    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckEventGetMarryOne.cs" />
-    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NoNeedFixInUpdateFace.cs" />
-    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckMarriageCompetitionStory.cs" />
-    <Compile Include="ModFunctions\NewActorMakeChildrenParentsFix.cs" />
-    <Compile Include="ModFunctions\NewActorControl.cs" />
-    <Compile Include="ModFunctions\NpcPassTurnCantChangeGangHarmony.cs" />
-    <Compile Include="ModFunctions\ObscureGenderSupportHarmony.cs" />
-    <Compile Include="ModFunctions\ObscureGenderHarmony.cs" />
-    <Compile Include="GreenSkinDebugInfo\DebugReportForNewBirth.cs" />
-    <Compile Include="ModFunctions\UnlockLevelGenderRequireHarmony.cs" />
-    <Compile Include="ModFunctions\UnlockGangGenderRequireHarmony.cs" />
-    <Compile Include="ModFunctions\UnlockLevelGenderRequire.cs" />
-    <Compile Include="Main.cs" />
-    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingNpcTurnChangeActions.cs" />
-    <Compile Include="ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckEventTaiwuTryGetLover.cs" />
-    <Compile Include="QuickLogger.cs" />
+    <Compile Include="GenderControl\GreenSkinDebugInfo\GreenSkinDebugRecord.cs" />
+    <Compile Include="GenderControl\ModFunctions\DisplayFaceColorHarmony.cs" />
+    <Compile Include="GenderControl\ModFunctions\DisplayFaceColor.cs" />
+    <Compile Include="GenderControl\ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckMatchmakingActorWindows.cs" />
+    <Compile Include="GenderControl\ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckMatchmakingOption.cs" />
+    <Compile Include="GenderControl\ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckEventGetMarryOne.cs" />
+    <Compile Include="GenderControl\ModFunctions\ObscureGenderNeedWorkingCheck\NoNeedFixInSetActorMassage.cs" />
+    <Compile Include="GenderControl\ModFunctions\ObscureGenderNeedWorkingCheck\NoNeedFixInUpdateFace.cs" />
+    <Compile Include="GenderControl\ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckMarriageCompetitionStory.cs" />
+    <Compile Include="GenderControl\ModFunctions\NewActorMakeChildrenParentsFix.cs" />
+    <Compile Include="GenderControl\ModFunctions\NewActorControl.cs" />
+    <Compile Include="GenderControl\ModFunctions\NpcPassTurnCantChangeGangHarmony.cs" />
+    <Compile Include="GenderControl\ModFunctions\ObscureGenderSupportHarmony.cs" />
+    <Compile Include="GenderControl\ModFunctions\ObscureGenderHarmony.cs" />
+    <Compile Include="GenderControl\GreenSkinDebugInfo\DebugReportForNewBirth.cs" />
+    <Compile Include="GenderControl\ModFunctions\UnlockLevelGenderRequireHarmony.cs" />
+    <Compile Include="GenderControl\ModFunctions\UnlockGangGenderRequireHarmony.cs" />
+    <Compile Include="GenderControl\ModFunctions\UnlockLevelGenderRequire.cs" />
+    <Compile Include="GenderControl\Main.cs" />
+    <Compile Include="GenderControl\ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingNpcTurnChangeActions.cs" />
+    <Compile Include="GenderControl\ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckEventTaiwuTryGetLover.cs" />
+    <Compile Include="GenderControl\QuickLogger.cs" />
     <None Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="build\dlls\Assembly-CSharp.dll" />
+    <Compile Include="GenderControl\Settings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
