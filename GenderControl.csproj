@@ -106,21 +106,19 @@
   <PropertyGroup>
     <PostBuildEvent>echo copy dll file to steam game
 setlocal
-if not exist "D:\SteamLibrary\steamapps\common\The Scroll Of Taiwu\BepInEx\plugins\GenderControl\" echo not copy file &amp;amp; goto END
-if %25errorlevel%25 neq 0 goto :cmEnd
+if not exist "D:\SteamLibrary\steamapps\common\The Scroll Of Taiwu\BepInEx\plugins\GenderControl\" echo not copy file &amp; goto END
+if %errorlevel% neq 0 goto :cmEnd
 copy "$(TargetPATH)" "D:\SteamLibrary\steamapps\common\The Scroll Of Taiwu\BepInEx\plugins\GenderControl"
-if %25errorlevel%25 neq 0 goto :cmEnd
+if %errorlevel% neq 0 goto :cmEnd
 echo "copy dll file GenderControl.dll ok"
-if %25errorlevel%25 neq 0 goto :cmEnd
+if %errorlevel% neq 0 goto :cmEnd
 :END
-if %25errorlevel%25 neq 0 goto :cmEnd
+if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
-endlocal
-call :cmErrorLevel %25errorlevel%25
-goto :cmDone
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 :cmErrorLevel
-exit /b %251
+exit /b %1
 :cmDone
-if %25errorlevel%25 neq 0 goto :VCEnd</PostBuildEvent>
+if %errorlevel% neq 0 goto :VCEnd</PostBuildEvent>
   </PropertyGroup>
 </Project>
