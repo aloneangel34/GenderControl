@@ -81,7 +81,7 @@ namespace GenderControl
                             Characters.SetCharProperty(actorId, 14, Main.Setting.newActorGenderLock.Value.ToString());
 
                             //若baseActorId为1～32，【性别变更后、需要调整人物的baseActorId（人物属性997项）】
-                            if (baseActorId > 0 && baseActorId < 33)
+                            if (baseActorId >= 1 && baseActorId <= 32)
                             {
                                 //依照原性别，判定怎么调整
                                 if (gender == 1)
@@ -139,7 +139,7 @@ namespace GenderControl
                 }
 
                 //若 baseActorId在指定颜值UP列表中 且 原方法传入的baseCharm参数为不为正或省略，【新人物魅力上调（依照人物原有魅力区间、魅力上调系数）】
-                if (Settings.RegionCharmUpBaseActorIds.Contains(baseActorId) && baseCharm < 0)
+                if (Settings.RegionCharmUpBaseActorIds.Contains(baseActorId))
                 {
                     //获取新人物的基础魅力
                     int.TryParse(__instance.GetActorDate(actorId, 15, false), out int charm);
@@ -163,21 +163,33 @@ namespace GenderControl
                         charm = Mathf.Clamp((charm + charmUpValue), charm, 900);
                         //重新设定魅力数值
                         Characters.SetCharProperty(actorId, 15, charm.ToString());
-                        //以新魅力来重新随机设定人物面容（如果是生下来的孩子、有继承样貌的话，baseCharm应该不会为-1。若真有、以后再修正）
-                        __instance.RandActorFace(actorId, charm, -1);
 
-                        //若新人物的出家属性不为0，要将面容变更后的发型再设定一下
-                        if (int.TryParse(__instance.presetActorDate[baseActorId][2], out int n) && n != 0)
+                        if (baseCharm < 0)
                         {
-                            //读取新人物面容数据
-                            string[] FaceData = __instance.GetActorDate(actorId, 995, false).Split(new char[] { '|' });
+                            //以新魅力来重新随机设定人物面容（如果是生下来的孩子、有继承样貌的话，baseCharm应该不会为-1。若真有、以后再修正）
+                            __instance.RandActorFace(actorId, charm, -1);
 
-                            //发型设为 "15"（出家专用发型）
-                            FaceData[7] = "15";
-                            //重新设定人物相貌
-                            //Characters.SetCharProperty(actorId, key, string.Format(format, args));
-                            Characters.SetCharProperty(actorId, 995, string.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}", FaceData));
+                            //若新人物的出家属性不为0，要将面容变更后的发型再设定一下
+                            if (int.TryParse(__instance.presetActorDate[baseActorId][2], out int n) && n != 0)
+                            {
+                                //读取新人物面容数据
+                                string[] faceData = __instance.GetActorDate(actorId, 995, false).Split(new char[] { '|' });
+
+                                if (faceData.Length >= 8)
+                                {
+                                    //发型设为 "15"（出家专用发型）
+                                    faceData[7] = "15";
+                                    //重新设定人物相貌
+                                    //Characters.SetCharProperty(actorId, key, string.Format(format, args));
+                                    Characters.SetCharProperty(actorId, 995, string.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}", faceData));
+                                }
+                                else
+                                {
+                                    QuickLogger.Log(LogLevel.Error, "在重设出家人发型时异常：actorId:{0} baseActorId:{1} 面容相貌数组长度:{2}", actorId, baseActorId, faceData.Length);
+                                }
+                            }
                         }
+
                     }
                 }
             }

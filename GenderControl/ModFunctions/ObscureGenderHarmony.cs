@@ -31,7 +31,7 @@ namespace GenderControl
         //public string GetActorDate(int actorId, int key, bool applyBonus = true)
         {
             //若尝试获取的人物属性为“人物性别14”
-            if (key == 14)
+            if (key == 14 && Main.Setting.obscureGender.Value)
             {
                 #region 补丁应该没问题，有需要再启用调试
                 //调试信息

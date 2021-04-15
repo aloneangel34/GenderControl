@@ -23,31 +23,32 @@ namespace GenderControl
     public class Main : BaseUnityPlugin
     {
         /// <summary>插件版本</summary>
-        public const string Version = "0.1.3";
+        public const string Version = "0.1.4";
         /// <summary>插件名字</summary>
         public const string ModDisplayName = "GenderControl/性别操控";
         /// <summary>插件ID</summary>
         public const string GUID = "TaiwuMOD.GenderControl";
         /// <summary>日志</summary> 
-        public static new ManualLogSource Logger;   //声明一个ManualLogSource实例类的的静态字段
+        public static new ManualLogSource Logger;   //声明一个ManualLogSource实例类的的静态字段（因为有基类继承，所以用new隐藏）
         /// <summary>MOD设置界面</summary>
         public static ModHelper Mod;                //声明一个ModHelper实例类的的静态字段
         /// <summary>设置</summary>
         public static Settings Setting;             //声明一个Settings实例类的静态字段
-        /// <summary>用于处理长字符串</summary>
-        public static StringBuilder SB;         //声明一个StringBuilder实例类的静态字段
+        /// <summary>用于处理长字符串的StringBuilder</summary>
+        public static StringBuilder SB;             //声明一个StringBuilder实例类的静态字段
 
         private void Awake()
         {
             DontDestroyOnLoad(this);
-            Logger = base.Logger;       //将Logger字段赋值为基类（BaseUnityPlugin）的Logger方法？
+            Logger = base.Logger;       //将Logger字段赋值为基类（BaseUnityPlugin）的Logger实例
             Setting = new Settings();   //创建Settings实例类的对象、并赋值给Setting字段
-            Setting.Init(Config);       //调用Init方法来进行设置选项的初始化
+            Setting.Init(Config);       //读取本插件的配置文件（继承下来的Config），调用Init方法来进行设置选项的初始化
             SB = new StringBuilder();   //创建StringBuilder实例类的对象、并赋值给SB字段
 
             Harmony harmony = new Harmony(GUID);
 
-            if (Setting.enable.Value)
+            //若MOD启用，则尝试加载所有Harmony补丁【不然则等用户开启MOD时再尝试加载】
+            if (Setting.ModEnable.Value)
             {
                 try
                 {
@@ -72,7 +73,7 @@ namespace GenderControl
                     //子组件排布间隔
                     Spacing = 10,
                     //组件边缘填充
-                    Padding = { 10,0,0,0 },
+                    Padding = { 10, 0, 0, 0 },
                 },
                 //大小自适应设置
                 SizeFitter =
@@ -89,19 +90,19 @@ namespace GenderControl
                         //组件的Name ID（是字符串，但并非该组件在游戏中的显示名称）
                         Name = "MOD总开关",
                         //组件的显示文本（会显示在UI上）
-                        Text = Setting.enable.Value ? "MOD 已开启" : "MOD 已关闭",
+                        Text = Setting.ModEnable.Value ? "MOD 已开启" : "MOD 已关闭",
                         //开关组件的开关状态
-                        isOn = Setting.enable.Value,
+                        isOn = Setting.ModEnable.Value,
                         //当数值改变时的操作
                         onValueChanged = (bool value, Toggle tg) =>
                         {
                             //将变动后的数值 赋值给 Setting.enabled.Value
                             //（bool型数值）“value”，是由这个动作 onValueChanged = (bool 「value」, Toggle tg) 传出来的
-                            Setting.enable.Value = value;
+                            Setting.ModEnable.Value = value;
 
                             //开关MOD时直接将会应用/卸载 Patch
                             //（该方式不需要YanCore作为支持，直接绿皮全开全关）
-                            if (value)
+                            if (Setting.ModEnable.Value)
                             {
                                 try
                                 {
@@ -126,7 +127,7 @@ namespace GenderControl
                                 }
                             }
 
-                            tg.Text = Setting.enable.Value ? "MOD 已开启" : "MOD 已关闭";
+                            tg.Text = Setting.ModEnable.Value ? "MOD 已开启" : "MOD 已关闭";
 
                             //遍历本组件（tg）的父组件（Parent）中的所有子组件（Children）【即可以理解为同级组件】
                             foreach (UnityUIKit.Core.ManagedGameObject managedGameObject in tg.Parent.Children)
@@ -135,7 +136,7 @@ namespace GenderControl
                                 if (managedGameObject.Name == "全体显示关闭")
                                 {
                                     //切换组件的显示/隐藏“SetActive(value)”
-                                    managedGameObject.SetActive(value);
+                                    managedGameObject.SetActive(Setting.ModEnable.Value);
                                     break;
                                 }
                             }
@@ -144,7 +145,7 @@ namespace GenderControl
                         //边框留白大约12.5，上下合计 或 左右合计 留白大约25。（游戏中MOD设置UI中）单个文字长宽约25。
                         //例比如1个文字，建议设为{ 50, 50 }；6个文字，建议设为{ 175, 50 } (宽度为左右留白25 + 文字宽度25 x 文字字数6)
                         //如果想要 宽度, 高度 自适应，则将对应项设为0即可。除了TaiwuToggle()类，不建议两项皆设为0（可能会导致外边框不显示？我不确定）
-                        Element = { PreferredSize = { 0, 60 } },
+                        Element = { PreferredSize = { 0, 50 } },
                         //粗体
                         UseBoldFont = true,
                     },
@@ -162,7 +163,7 @@ namespace GenderControl
                         },
                         //默认按照MOD总开关的值来确定是显示还是关闭
                         //（不加的话：若先将MOD设为关、然后退出重进，能看到虽然MOD启用按钮是灰色的，但下面的菜单却显示出来了）
-                        DefaultActive = Setting.enable.Value,
+                        DefaultActive = Setting.ModEnable.Value,
                         //大小自适应设置
                         SizeFitter =
                         {
@@ -185,7 +186,7 @@ namespace GenderControl
                                 Element =
                                 {
                                     //设定首选高度为60。
-                                    PreferredSize = { 0 , 60 }
+                                    PreferredSize = { 0 , 50 }
                                 },
                                 Children =
                                 {
@@ -193,9 +194,9 @@ namespace GenderControl
                                     new TaiwuLabel()
                                     {
                                         //标签文本，采用<color=#DDCCAA>较亮</color><color=#998877>柔和</color>两种文本颜色。默认的颜色太暗了
-                                        Text = "<color=#DDCCAA>选项设置</color><color=#998877>（更多详细说明请参看BepInEx\\config\\文件夹内的GenderControl.cfg配置文件）</color>",
+                                        Text = "<color=#DDCCAA>选项设置</color> <color=#998877>更多详细说明，请参看BepInEx\\config\\文件夹内的GenderControl.cfg配置文件</color>",
                                         //设定首选高度为60。
-                                        Element = { PreferredSize = { 0, 60 } },
+                                        Element = { PreferredSize = { 0, 50 } },
                                         //粗体
                                         UseBoldFont = true,
                                         UseOutline = true,
@@ -215,7 +216,7 @@ namespace GenderControl
                                 Element =
                                 {
                                     //设定首选高度为60。
-                                    PreferredSize = { 0 , 60 }
+                                    PreferredSize = { 0 , 50 }
                                 },
                                 Children =
                                 {
@@ -225,16 +226,17 @@ namespace GenderControl
                                         //标签文本
                                         Text = "<color=#DDCCAA>主要功能</color><color=#998877></color>",
                                         //设定首选高度为60。
-                                        Element = { PreferredSize = { 0, 60 } },
+                                        Element = { PreferredSize = { 0, 50 } },
                                         //粗体
                                         UseBoldFont = true,
                                         UseOutline = true,
                                     },
                                 }
                             },
-                            //【水平UI组：模糊性别判定 开关】
+                            //【水平UI组：主要功能UI组】
                             new Container()
                             {
+                                Name = "主要功能UI组",
                                 Group =
                                 {
                                     //子组件水平排布
@@ -251,13 +253,34 @@ namespace GenderControl
                                     new TaiwuToggle()
                                     {
                                         Text = "模糊性别判定",
+                                        TipTitle = "功能说明",
+                                        TipContant = "同性表白、同性生子、无同性流言蜚语、同性男媒女妁。女性可参加比武招亲\n太吾和NPC都受影响\n本功能开启后，可以指定怀孕方\n【注意】\n该功能并不会禁止异性间的行为",
                                         isOn = Setting.obscureGender.Value,
                                         onValueChanged = (bool value, Toggle tg) =>
                                         {
                                             Setting.obscureGender.Value = value;
+
+                                            foreach (var uiItem in tg.Parent.Children)
+                                            {
+                                                if (uiItem.Name == "怀孕")
+                                                {
+                                                    ((TaiwuLabel)uiItem).Text = Setting.obscureGender.Value ? "<color=#998877>← 辅助功能：怀孕方指定 已开启</color>" : "<color=#998877>← 辅助功能：怀孕方指定 已禁用</color>";
+                                                    break;
+                                                }
+                                            }
+
+                                            foreach (var uiItem in tg.Parent.Parent.Children)
+                                            {
+                                                if (uiItem.Name == "specifyPregnant1" || uiItem.Name == "specifyPregnant2")
+                                                {
+                                                    uiItem.SetActive(Setting.obscureGender.Value);
+                                                }
+                                            }
                                         },
                                         Element = { PreferredSize = { 200 } }
                                     },
+                                    #region 将说明内嵌（模糊性别判定）
+                                    /*
                                     //【标签：模糊性别判定 说明】
                                     new TaiwuLabel()
                                     {
@@ -265,29 +288,23 @@ namespace GenderControl
                                         Element = { PreferredSize = { 0, 50 } },
                                         UseOutline = true,
                                     },
-                                },
-                            },
-                            //【水平UI组：门派/身份不限性别 开关】
-                            new Container()
-                            {
-                                Name = "性别解禁UI组",
-                                Group =
-                                {
-                                    //子组件水平排布
-                                    Direction = UnityUIKit.Core.Direction.Horizontal,
-                                    Spacing = 10,
-                                },
-                                Element =
-                                {
-                                    PreferredSize = { 0, 50 }
-                                },
-                                Children =
-                                {
+                                    */
+                                    #endregion
+                                    //【标签：怀孕指定 说明】
+                                    new TaiwuLabel()
+                                    {
+                                        Name = "怀孕",
+                                        Text = Setting.obscureGender.Value ? "<color=#998877>← 辅助功能：怀孕方指定 已开启</color>" : "<color=#998877>← 辅助功能：怀孕方指定 已禁用</color>",
+                                        Element = { PreferredSize = { 0 } },
+                                        UseOutline = true,
+                                    },
                                     //【开关：门派/身份不限性别】
                                     new TaiwuToggle()
                                     {
                                         Name = "性别解禁开关",
                                         Text = "门派/身份不限性别",
+                                        TipTitle = "功能说明",
+                                        TipContant = "门派与身份不再限定性别\n【注意】\n开启新生人物性别锁时请同时开启此项！\n（特别是开启新游戏时）\n不然因性别不符、NPC无法晋升高层，可能会产生掌门缺失现象。",
                                         isOn = Setting.unlockGangLevelGenderRequire.Value,
                                         onValueChanged = (bool value, Toggle tg) =>
                                         {
@@ -305,6 +322,8 @@ namespace GenderControl
                                         },
                                         Element = { PreferredSize = { 200 } }
                                     },
+                                    #region 将说明内嵌（门派/身份不限性别）
+                                    /*
                                     //【标签：门派/身份不限性别 说明】
                                     new TaiwuLabel()
                                     {
@@ -312,7 +331,212 @@ namespace GenderControl
                                         Element = { PreferredSize = { 0, 50 } },
                                         UseOutline = true,
                                     },
+                                    */
+                                    #endregion
+                                    //【开关：Debug模式】
+                                    new TaiwuToggle()
+                                    {
+                                        Text = "Debug模式开关",
+                                        isOn = Setting.debugMode.Value,
+                                        TipTitle = "功能说明",
+                                        TipContant = "一般不必开启（开启会拖慢性能）\n若有遭遇BUG，请尽量“先开启此项、再重试一遍遭遇BUG的场景，然后把输出的信息日志LOG提交给作者”",
+                                        //当数值改变时（开关按钮）
+                                        onValueChanged = (bool value, Toggle tg) =>
+                                        {
+                                            Setting.debugMode.Value = value;
+                                        },
+                                        Element = { PreferredSize = { 200 } }
+                                    },
+                                    #region 将说明内嵌（Debug模式开关）
+                                    /*
+                                    //【标签：Debug模式 说明】
+                                    new TaiwuLabel()
+                                    {
+                                        Text = "<color=#998877>开启后输出简陋的调试信息，一般不必开启。（开启会拖慢性能）</color>",
+                                        Element = { PreferredSize = { 0, 50 } },
+                                        UseOutline = true,
+                                    },
+                                    */
+	                                #endregion
                                 },
+                            },
+                             //【水平UI组：指定有太吾参与时的怀孕方 选项】
+                            new Container()
+                            {
+                                Name = "specifyPregnant1",
+                                DefaultActive = Setting.obscureGender.Value,
+                                Group =
+                                {
+                                    //子组件水平排布
+                                    Direction = UnityUIKit.Core.Direction.Horizontal,
+                                    Spacing = 10,
+                                },
+                                Element =
+                                {
+                                    //设定首选高度为50。
+                                    PreferredSize = { 0, 50 }
+                                },
+                                Children =
+                                {
+                                    //【标签：指定怀孕方（太吾参与时） 说明】
+                                    new TaiwuLabel()
+                                    {
+                                        Text = "<color=#DDCCAA>指定怀孕方（太吾参与时）</color>",
+                                        Element = { PreferredSize = { 300, 50 } },
+                                        UseOutline = true,
+                                    },
+                                    //【开关组：自动/太吾/对方/随机】
+                                    new ToggleGroup()
+                                    {
+                                        Group =
+                                        {
+                                            //子组件水平排布
+                                            Direction = UnityUIKit.Core.Direction.Horizontal,
+                                            Spacing = 10,
+                                        },
+                                        Children =
+                                        { 
+                                            //【开关：自动】
+                                            new TaiwuToggle()
+                                            {
+                                                Text = "自动",
+                                                TipTitle = "选项说明",
+                                                TipContant = "自动按照太吾的性别来指定怀孕方\n太吾为男性时，对方为怀孕方\n太吾为女性时，太吾为怀孕方",
+                                                isOn = Setting.specifyPregnantForTaiwu.Value == 0,
+                                                //当数值改变时（开关按钮）
+                                                onValueChanged = (bool value, Toggle tg) =>
+                                                {
+                                                    Setting.specifyPregnantForTaiwu.Value = 0;
+                                                },
+                                                Element = { PreferredSize = { 0 } }
+                                            },
+                                            //【开关：太吾】
+                                            new TaiwuToggle()
+                                            {
+                                                Text = "太吾",
+                                                TipTitle = "选项说明",
+                                                TipContant = "指定太吾为怀孕方",
+                                                isOn = Setting.specifyPregnantForTaiwu.Value == 1,
+                                                //当数值改变时（开关按钮）
+                                                onValueChanged = (bool value, Toggle tg) =>
+                                                {
+                                                    Setting.specifyPregnantForTaiwu.Value = 1;
+                                                },
+                                                Element = { PreferredSize = { 0 } }
+                                            },
+                                            //【开关：对方】
+                                            new TaiwuToggle()
+                                            {
+                                                Text = "对方",
+                                                TipTitle = "选项说明",
+                                                TipContant = "指定对方为怀孕方",
+                                                isOn = Setting.specifyPregnantForTaiwu.Value == 2,
+                                                //当数值改变时（开关按钮）
+                                                onValueChanged = (bool value, Toggle tg) =>
+                                                {
+                                                    Setting.specifyPregnantForTaiwu.Value = 2;
+                                                },
+                                                Element = { PreferredSize = { 0 } }
+                                            },
+                                            //【开关：随机】
+                                            new TaiwuToggle()
+                                            {
+                                                Text = "随机",
+                                                TipTitle = "选项说明",
+                                                TipContant = "50%几率随机指定怀孕方",
+                                                isOn = Setting.specifyPregnantForTaiwu.Value == 3,
+                                                //当数值改变时（开关按钮）
+                                                onValueChanged = (bool value, Toggle tg) =>
+                                                {
+                                                    Setting.specifyPregnantForTaiwu.Value = 3;
+                                                },
+                                                Element = { PreferredSize = { 0 } }
+                                            },
+                                        }
+                                    },
+                                }
+                            }, 
+                            //【水平UI组：指定异性NPC之间的怀孕方 选项】
+                            new Container()
+                            {
+                                Name = "specifyPregnant2",
+                                Group =
+                                {
+                                    //子组件水平排布
+                                    Direction = UnityUIKit.Core.Direction.Horizontal,
+                                    Spacing = 10,
+                                },
+                                DefaultActive = Setting.obscureGender.Value,
+                                Element =
+                                {
+                                    //设定首选高度为50。
+                                    PreferredSize = { 0, 50 }
+                                },
+                                Children =
+                                {
+                                    //【标签：指定怀孕方（异性NPC之间） 说明】
+                                    new TaiwuLabel()
+                                    {
+                                        Text = "<color=#DDCCAA>指定怀孕方（异性NPC之间）</color>",
+                                        Element = { PreferredSize = { 300, 50 } },
+                                        UseOutline = true,
+                                    },
+                                    //【开关组：女性/男性/随机】
+                                    new ToggleGroup()
+                                    {
+                                        Group =
+                                        {
+                                            //子组件水平排布
+                                            Direction = UnityUIKit.Core.Direction.Horizontal,
+                                            Spacing = 10,
+                                        },
+                                        Children =
+                                        { 
+                                            //【开关：女性】
+                                            new TaiwuToggle()
+                                            {
+                                                Text = "女性",
+                                                TipTitle = "选项说明",
+                                                TipContant = "按照游戏默认，指定女性为怀孕方",
+                                                isOn = Setting.specifyPregnantForOppsiteSex.Value == 0,
+                                                //当数值改变时（开关按钮）
+                                                onValueChanged = (bool value, Toggle tg) =>
+                                                {
+                                                    Setting.specifyPregnantForOppsiteSex.Value = 0;
+                                                },
+                                                Element = { PreferredSize = { 0 } }
+                                            },
+                                            //【开关：男性】
+                                            new TaiwuToggle()
+                                            {
+                                                Text = "男性",
+                                                TipTitle = "选项说明",
+                                                TipContant = "指定男性为怀孕方",
+                                                isOn = Setting.specifyPregnantForOppsiteSex.Value == 1,
+                                                //当数值改变时（开关按钮）
+                                                onValueChanged = (bool value, Toggle tg) =>
+                                                {
+                                                    Setting.specifyPregnantForOppsiteSex.Value = 1;
+                                                },
+                                                Element = { PreferredSize = { 0 } }
+                                            },
+                                            //【开关：随机】
+                                            new TaiwuToggle()
+                                            {
+                                                Text = "随机",
+                                                TipTitle = "选项说明",
+                                                TipContant = "50%几率随机指定怀孕方",
+                                                isOn = Setting.specifyPregnantForOppsiteSex.Value == 2,
+                                                //当数值改变时（开关按钮）
+                                                onValueChanged = (bool value, Toggle tg) =>
+                                                {
+                                                    Setting.specifyPregnantForOppsiteSex.Value = 2;
+                                                },
+                                                Element = { PreferredSize = { 0 } }
+                                            },
+                                        }
+                                    },
+                                }
                             },
                             //【垂直UI容器：新生人物修正 分隔栏】
                             new Container()
@@ -324,13 +548,11 @@ namespace GenderControl
                                     Direction = UnityUIKit.Core.Direction.Vertical,
                                     //子组件排布间隔
                                     Spacing = 10,
-                                    //组件边缘填充
-                                    Padding = { 10,0,0,0 },
                                 },
                                 Element =
                                 {
                                     //设定首选高度为60。
-                                    PreferredSize = { 0 , 60 }
+                                    PreferredSize = { 0 , 50 }
                                 },
                                 Children =
                                 {
@@ -340,7 +562,7 @@ namespace GenderControl
                                         //标签文本，采用<color=#DDCCAA>较亮</color><color=#998877>柔和</color>两种文本颜色。默认的颜色太暗了
                                         Text = "<color=#DDCCAA>新生人物修正</color><color=#998877>（包括新生婴儿和系统生成的成人。剧情、剑冢人物除外。不会对现存角色产生影响）</color>",
                                         //设定首选高度为60。
-                                        Element = { PreferredSize = { 0, 60 } },
+                                        Element = { PreferredSize = { 0, 50 } },
                                         //粗体
                                         UseBoldFont = true,
                                         UseOutline = true,
@@ -397,12 +619,17 @@ namespace GenderControl
                                             new TaiwuToggle()
                                             {
                                                 Text = "锁定为男性",
+                                                TipTitle = "重要提醒！",
+                                                TipContant = "【注意】\n若开启性别锁，请同时开启“门派/身份不限性别”功能\n（特别是开启新游戏时）\n不然因性别不符、NPC无法晋升高层，可能会产生掌门缺失现象。",
                                                 isOn = Setting.newActorGenderLock.Value == 1,
                                                 //当数值改变时（开关按钮）
                                                 onValueChanged = (bool value, Toggle tg) =>
                                                 {
                                                     Setting.newActorGenderLock.Value = 1;
 
+                                                    #region 暂时弃用
+
+                                                    /*
                                                     //因为【开启性别锁时，若不同步开启“门派身份性限制解除”会导致无法晋升、缺少掌门的情况】
                                                     //所以需要在开启性别锁的同时与其绑定
                                                     try
@@ -410,14 +637,14 @@ namespace GenderControl
                                                         //在本开关组件的上一级（开关组）的上一级（水平UI组）的上一级（自适应垂直UI组）的下一级中找 Name属性 为“性别解禁UI组”的组件“n”
                                                         //在组件“n”的下一级中找 Name属性 为“性别解禁开关”的组件“m”
                                                         //再将组件“m”的类型强制转换为TaiwuToggle，这样就可以将该开关的 isOn属性 设为true
-                                                        ((TaiwuToggle)((tg.Parent.Parent.Parent.Children.Find(n => n.Name == "性别解禁UI组")).Children.Find(m => m.Name == "性别解禁开关"))).isOn = true;
+                                                        ((TaiwuToggle)((tg.Parent.Parent.Parent.Children.Find(n => n.Name == "主要功能UI组")).Children.Find(m => m.Name == "性别解禁开关"))).isOn = true;
                                                     }
                                                     catch (Exception ex)
                                                     {
                                                         Logger.LogError(ex);
                                                     }
-
-
+                                                    */
+                                                    #endregion
                                                 },
                                                 Element = { PreferredSize = { 175 } }
                                             },
@@ -425,12 +652,17 @@ namespace GenderControl
                                             new TaiwuToggle()
                                             {
                                                 Text = "锁定为女性",
+                                                TipTitle = "重要提醒！",
+                                                TipContant = "【注意】\n若开启性别锁，请同时开启“门派/身份不限性别”功能\n（特别是开启新游戏时）\n不然因性别不符、NPC无法晋升高层，可能会产生掌门缺失现象。",
                                                 isOn = Setting.newActorGenderLock.Value == 2,
                                                 //当数值改变时（开关按钮）
                                                 onValueChanged = (bool value, Toggle tg) =>
                                                 {
                                                     Setting.newActorGenderLock.Value = 2;
 
+                                                    #region 暂时弃用
+
+                                                    /*
                                                     //因为【开启性别锁时，若不同步开启“门派身份性限制解除”会导致无法晋升、缺少掌门的情况】
                                                     //所以需要在开启性别锁的同时与其绑定
                                                     try
@@ -438,12 +670,14 @@ namespace GenderControl
                                                         //在本开关组件的上一级（开关组）的上一级（水平UI组）的上一级（自适应垂直UI组）的下一级中找 Name属性 为“性别解禁UI组”的组件“n”
                                                         //在组件“n”的下一级中找 Name属性 为“性别解禁开关”的组件“m”
                                                         //再将组件“m”的类型强制转换为TaiwuToggle，这样就可以将该开关的 isOn属性 设为true
-                                                        ((TaiwuToggle)((tg.Parent.Parent.Parent.Children.Find(n => n.Name == "性别解禁UI组")).Children.Find(m => m.Name == "性别解禁开关"))).isOn = true;
+                                                        ((TaiwuToggle)((tg.Parent.Parent.Parent.Children.Find(n => n.Name == "主要功能UI组")).Children.Find(m => m.Name == "性别解禁开关"))).isOn = true;
                                                     }
                                                     catch (Exception ex)
                                                     {
                                                         Logger.LogError(ex);
                                                     }
+                                                    */
+                                                    #endregion
                                                 },
                                                 Element = { PreferredSize = { 175 } }
                                             },
@@ -475,7 +709,7 @@ namespace GenderControl
                                 {
                                     //子组件水平排布
                                     Direction = UnityUIKit.Core.Direction.Horizontal,
-                                    Spacing = 25,
+                                    Spacing = 10,
                                 },
                                 Element =
                                 {
@@ -487,14 +721,14 @@ namespace GenderControl
                                     //【开关：新人物皆无异性面相】
                                     new TaiwuToggle()
                                     {
-                                        Text = "新生人物皆无 男生女相/女生男相",
+                                        Text = "新生人物皆无男生女相/女生男相",
                                         isOn = Setting.newActorNoOppositeGenderFace.Value,
                                         //当数值改变时（开关按钮）
                                         onValueChanged = (bool value, Toggle tg) =>
                                         {
                                             Setting.newActorNoOppositeGenderFace.Value = value;
                                         },
-                                        Element = { PreferredSize = { 0 } }
+                                        Element = { PreferredSize = { 0, 50 } }
                                     },
                                     //【开关：新人物皆为双性恋者】
                                     new TaiwuToggle()
@@ -505,7 +739,7 @@ namespace GenderControl
                                         {
                                             Setting.newActorAllBisexual.Value = value;
                                         },
-                                        Element = { PreferredSize = { 0 } }
+                                        Element = { PreferredSize = { 0, 50 } }
                                     },
                                 }
                             },
@@ -607,9 +841,8 @@ namespace GenderControl
                                                     //根据更新本按钮的文本
                                                     allRegion.Text = Settings.NextTimeAllRegionSetOn ? "一键全开" : "一键全关";
 
-
                                                     //调试
-                                                    if (Main.Setting.debugMode.Value)
+                                                    if (Setting.debugMode.Value)
                                                     {
                                                         SB.AppendLine("一键设置后，魅力上修地域对应的BaseActorID列表：");
                                                         for (int i = 0; i < Settings.RegionCharmUpBaseActorIds.Count; i++)
@@ -1181,13 +1414,11 @@ namespace GenderControl
                                     Direction = UnityUIKit.Core.Direction.Vertical,
                                     //子组件排布间隔
                                     Spacing = 10,
-                                    //组件边缘填充
-                                    Padding = { 10,0,0,0 },
                                 },
                                 Element =
                                 {
                                     //设定首选高度为60。
-                                    PreferredSize = { 0 , 60 }
+                                    PreferredSize = { 0 , 50 }
                                 },
                                 Children =
                                 {
@@ -1197,14 +1428,13 @@ namespace GenderControl
                                         //标签文本
                                         Text = "<color=#DDCCAA>其他附带功能</color><color=#998877></color>",
                                         //设定首选高度为60。
-                                        Element = { PreferredSize = { 0, 60 } },
+                                        Element = { PreferredSize = { 0, 50 } },
                                         //粗体
                                         UseBoldFont = true,
                                         UseOutline = true,
                                     },
                                 }
                             },
-                            
                             //【水平UI组：显示肤色变更 选项】
                             new Container()
                             {
@@ -1228,6 +1458,7 @@ namespace GenderControl
                                         Element = { PreferredSize = { 0, 50 } },
                                         UseOutline = true,
                                     },
+                                    //【开关组：肤色选项】
                                     new ToggleGroup()
                                     {
                                         Group =
@@ -1810,43 +2041,6 @@ namespace GenderControl
                                         }
                                     },
                                 },
-                            },
-                            //【水平UI组：Debug模式 开关】
-                            new Container()
-                            {
-                                Group =
-                                {
-                                    //子组件水平排布
-                                    Direction = UnityUIKit.Core.Direction.Horizontal,
-                                    Spacing = 10,
-                                },
-                                Element =
-                                {
-                                    //设定首选高度为50。
-                                    PreferredSize = { 0, 50 }
-                                },
-                                Children =
-                                {
-                                    //【开关：Debug模式】
-                                    new TaiwuToggle()
-                                    {
-                                        Text = "Debug模式开关",
-                                        isOn = Setting.debugMode.Value,
-                                        //当数值改变时（开关按钮）
-                                        onValueChanged = (bool value, Toggle tg) =>
-                                        {
-                                            Setting.debugMode.Value = value;
-                                        },
-                                        Element = { PreferredSize = { 200 } }
-                                    },
-                                    //【标签：Debug模式 说明】
-                                    new TaiwuLabel()
-                                    {
-                                        Text = "<color=#998877>开启后输出简陋的调试信息，一般不必开启。（开启会拖慢性能）</color>",
-                                        Element = { PreferredSize = { 0, 50 } },
-                                        UseOutline = true,
-                                    },
-                                }
                             },
                         }
                     },

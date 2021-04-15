@@ -92,6 +92,7 @@
     <Compile Include="GenderControl\ModFunctions\ObscureGenderSupportHarmony.cs" />
     <Compile Include="GenderControl\ModFunctions\ObscureGenderHarmony.cs" />
     <Compile Include="GenderControl\GreenSkinDebugInfo\DebugReportForNewBirth.cs" />
+    <Compile Include="GenderControl\ModFunctions\SpecifyPregnantSide.cs" />
     <Compile Include="GenderControl\ModFunctions\UnlockLevelGenderRequireHarmony.cs" />
     <Compile Include="GenderControl\ModFunctions\UnlockGangGenderRequireHarmony.cs" />
     <Compile Include="GenderControl\ModFunctions\UnlockLevelGenderRequire.cs" />

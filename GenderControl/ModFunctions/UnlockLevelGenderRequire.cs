@@ -68,7 +68,7 @@ namespace GenderControl
                 //调试信息
                 if (Main.Setting.debugMode.Value)
                 {
-                    QuickLogger.Log(LogLevel.Info, "解禁身份性别：尝试还原presetGangGroupDateValue[101]。还原用记录的条目数：{0},实际presetGangGroupDateValue条目数：{0}", RecordLevelGenderRequir.Count, DateFile.instance.presetGangGroupDateValue.Count);
+                    QuickLogger.Log(LogLevel.Info, "解禁身份性别：尝试还原presetGangGroupDateValue[101]。还原用记录的条目数：{0},实际presetGangGroupDateValue条目数：{1}", RecordLevelGenderRequir.Count, DateFile.instance.presetGangGroupDateValue.Count);
                 }
 
                 //如果记录不为空，以记录来还原数据（若虽然字典条目不为空，但某个条目的值为空，则以字符串“0”代替）

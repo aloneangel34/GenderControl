@@ -26,7 +26,7 @@ namespace GenderControl
         //public List<int> GetActorFeature(int key, bool getAll = false)
         {
             //性别模糊实际生效时，对原方法返回的特性列表中的【无法生育特性】做修正
-            if (ObscureGenderHarmony.NeedPacth)
+            if (Main.Setting.obscureGender.Value && ObscureGenderHarmony.NeedPacth)
             {
                 //如果人物ID为“正在设置过月行动的NPC” 且人物有“石芯玉女1002”特性
                 if (Settings.PatchActorID == key && __result.Contains(1002))
