@@ -23,10 +23,6 @@ namespace GenderControl
         public ConfigEntry<bool> unlockGangLevelGenderRequire;
         /// <summary>整数：新人物性别锁定</summary>
         public ConfigEntry<int> newActorGenderLock;
-        #region 大概翻了翻生生世世MOD，发现似乎并不与其冲突，作废
-        ///// <summary>开关：是否不锁定投胎转世者的性别（尝试避免和生生世世锁冲突）</summary>
-        //public ConfigEntry<bool> newActorGenderLockExcludeSamsara;
-        #endregion
         /// <summary>整数：指定怀孕对象（太吾）</summary>
         public ConfigEntry<int> specifyPregnantForTaiwu;
         /// <summary>整数：指定怀孕对象（异性NPC）</summary>
@@ -79,9 +75,6 @@ namespace GenderControl
             specifyPregnantForTaiwu = Config.Bind("怀孕方指定", "specifyPregnantForTaiwu", 0, "【指定怀孕对象（太吾参与的场合）】\n指定有太吾参与时的怀孕方（开启“模糊性别判定”后生效）。\n0 按照太吾性别自动判定（太吾为男性，对象怀孕/太吾为女性，太吾怀孕）\n1 指定为太吾怀孕方\n2 指定对象为怀孕方\n3 50%随机指定怀孕方");
             specifyPregnantForOppsiteSex = Config.Bind("怀孕方指定", "specifyPregnantForOppsiteSex", 0, "【指定怀孕对象（异性NPC之间的场合）】\n指定异性NPC中的怀孕方（开启“模糊性别判定”后生效）。\n0 指定女性为怀孕方（游戏默认）\n1 指定男性为怀孕方\n2 50%随机指定怀孕方\n（同性NPC之间怀孕时，50%随机指定，不受该功能影响）");
             newActorGenderLock = Config.Bind("新生人物设定项", "newActorGenderLock", 0, "【新生人物性别锁定】\n仅对新生人物产生影响（剧情、剑冢人物除外）。\n不会对现有人物产生影响，所以若想要全世界单一性别，新在开启性别锁时开新档。\n0 不锁定，1 锁定男性，2 锁定女性\n理论上不会影响太吾人物");
-            #region 大概翻了翻生生世世MOD，发现似乎并不与其冲突，作废
-            //newActorGenderLockExcludeSamsara = Config.Bind("新生人物设定项", "newActorGenderLockExcludeSamsara", false, "【是否不锁定投胎转世者的性别】\n尝试避免和生生世世锁冲突（还没看对面的代码，说不定这样绕不过）");
-            #endregion
             newActorNoOppositeGenderFace = Config.Bind("新生人物设定项", "newActorNoOppositeGenderFace", false, "【新人物不出现男生女相/女生男相】\n游戏原本有3%的几率产生，开启后新生人物绝对不会出现异性生相（剧情、剑冢人物除外）");
             newActorAllBisexual = Config.Bind("新生人物设定项", "newActorAllBisexual", false, "【新人物皆设为双性恋】\n游戏原本有20%的几率产生，开启后新生人物都会是双性恋（剧情、剑冢人物除外）\n若开启了本MOD的【模糊性别】功能，则此处开不开都无所谓\n游戏本身不包含纯同性恋取向");
             newActorInRegionCharmUp = Config.Bind("新生人物设定项", "newActorInRegionCharmUp", new bool[15], "【指定地域的新人物魅力上修】\n指定地域（省份）的新生人物，会根据人物的基础魅力进行魅力上修（剧情、剑冢人物除外）。\n基础魅力越低、则上修越多，700以上不调整。\n同时无父无母的新生人物会根据上修后的魅力重新生成面容\n（有父/母方的新人物则不会重新生成，不然就打破相貌继承了）");

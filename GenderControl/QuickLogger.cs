@@ -9,7 +9,7 @@ namespace GenderControl
     public static class QuickLogger
     {
         /// <summary>
-        /// 用BepInEx的Logging，按指定信息等级输出复合格式字符串信息
+        /// 用Main类中，创建的继承自BepInEx的Logging，按指定信息等级输出复合格式字符串信息
         /// </summary>
         /// <param name="level">输出信息的等级</param>
         /// <param name="formatString">复合格式字符串（例如"Year{0} Month{1}"这种）</param>

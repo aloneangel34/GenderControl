@@ -63,11 +63,6 @@ namespace GenderControl
                 //    QuickLogger.Log(LogLevel.Info, "actorId:{0} baseActorId:{1} 魅力:{2} 加成魅力:{3} 性别:{4} 出家:{5}", actorId, baseActorId, __instance.GetActorDate(actorId, 15, false), __instance.GetActorDate(actorId, 15, true), __instance.GetActorDate(actorId, 14, false), __instance.GetActorDate(actorId, 2, false));
                 //}
 
-                #region 查了查生生世世，发现不需要特殊处理
-                //若 性别锁已启用 且 （未启用性别锁定排除转世 或 转世信息中不含人物母方），【进行进一步性别锁判定】
-                //if (Main.Setting.newActorGenderLock.Value != 0 && (!Main.Setting.newActorGenderLockExcludeSamsara.Value || !DateFile.instance.samsaraPlatformChildrenData.ContainsKey(motherId)))
-                #endregion
-
                 //若 性别锁已启用（且有合法值）
                 if (Main.Setting.newActorGenderLock.Value == 1 || Main.Setting.newActorGenderLock.Value == 2)
                 {
@@ -138,7 +133,7 @@ namespace GenderControl
                     Characters.SetCharProperty(actorId, 21, "1");       //重设新人物的“性取向”（17项）
                 }
 
-                //若 baseActorId在指定颜值UP列表中 且 原方法传入的baseCharm参数为不为正或省略，【新人物魅力上调（依照人物原有魅力区间、魅力上调系数）】
+                //若 baseActorId在指定颜值UP列表中，【新人物魅力上调（依照人物原有魅力区间、魅力上调系数）】
                 if (Settings.RegionCharmUpBaseActorIds.Contains(baseActorId))
                 {
                     //获取新人物的基础魅力
@@ -154,22 +149,23 @@ namespace GenderControl
 
 
                         //调试信息
-                        if (Main.Setting.debugMode.Value)
-                        {
-                            QuickLogger.Log(LogLevel.Info, "actorId:{0} 原魅力:{1} 魅力上升值:{2} （终值最高900） ", actorId, charm, charmUpValue);
-                        }
+                        //if (Main.Setting.debugMode.Value)
+                        //{
+                        //    QuickLogger.Log(LogLevel.Info, "actorId:{0} 原魅力:{1} 魅力上升值:{2} （终值最高900） ", actorId, charm, charmUpValue);
+                        //}
 
                         //魅力上调（上限为900，下限为原数值。防止出错）
                         charm = Mathf.Clamp((charm + charmUpValue), charm, 900);
                         //重新设定魅力数值
                         Characters.SetCharProperty(actorId, 15, charm.ToString());
 
+                        //若原方法传入的baseCharm参数为不为正或省略（有父母的新生儿、其baseCharm必定为正，此时为了不破坏相貌继承。需要排除出去）
                         if (baseCharm < 0)
                         {
-                            //以新魅力来重新随机设定人物面容（如果是生下来的孩子、有继承样貌的话，baseCharm应该不会为-1。若真有、以后再修正）
+                            //以新魅力来重新随机设定人物面容
                             __instance.RandActorFace(actorId, charm, -1);
 
-                            //若新人物的出家属性不为0，要将面容变更后的发型再设定一下
+                            //若新人物的出家属性不为0，要在面容重设后，再把发型变回出家专用发型
                             if (int.TryParse(__instance.presetActorDate[baseActorId][2], out int n) && n != 0)
                             {
                                 //读取新人物面容数据

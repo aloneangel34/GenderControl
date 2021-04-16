@@ -7,10 +7,10 @@ using HarmonyLib;
 using Random = UnityEngine.Random;
 using BepInEx.Logging;
 
-namespace GenderControl.GenderControl.ModFunctions
+namespace GenderControl
 {
     /// <summary>
-    /// AISetChildren （NPC怀孕设置）的Patch补丁
+    /// （仅在 模糊性别判定功能 开关开启时生效）按设置指定怀孕方（太吾参与、异性NPC间）。同性NPC固定设为50%随机
     /// </summary>
     [HarmonyPatch(typeof(PeopleLifeAI), "AISetChildren")]
     public static class SpecifyPregnantSide
@@ -21,7 +21,7 @@ namespace GenderControl.GenderControl.ModFunctions
         static int _taiwuActorId;
 
         /// <summary>
-        /// 
+        /// 怀孕判定调用前，尝试按设置指定怀孕方（同时暂时开启性别模糊的NeedPatch）
         /// </summary>
         /// <param name="__result">原方法的返回值（是否成功怀孕）</param>
         /// <param name="fatherId">父方人物ID</param>
@@ -32,7 +32,7 @@ namespace GenderControl.GenderControl.ModFunctions
         private static void AISetChildrenPrefix(ref int fatherId, ref int motherId)
         //public bool AISetChildren(int fatherId, int motherId, int setFather, int setMother)
         {
-            //若性别模糊选项值为true（一般所指的已启用是指NeedPatch，抱歉造成歧义），则追加指定怀孕方
+            //若 模糊性别判定功能 开关开启（一般所指的已启用是指NeedPatch，抱歉造成歧义），则追加指定怀孕方
             if (Main.Setting.obscureGender.Value)
             {
                 _isPrefixRun = true;                                //记录，告知后置补丁、本前置补丁未被其他前置补丁跳过
@@ -42,8 +42,8 @@ namespace GenderControl.GenderControl.ModFunctions
                 //若性别模糊已启用，【暂时关闭性别模糊】
                 if (ObscureGenderHarmony.NeedPacth == true)
                 {
-                    isNeedPacthDisabledAtFront = true;               //记录在开头已经暂时关闭了
-                    ObscureGenderHarmony.NeedPacth = false;     //在本补丁内暂时禁用性别模糊
+                    isNeedPacthDisabledAtFront = true;              //记录在开头已经暂时关闭了
+                    ObscureGenderHarmony.NeedPacth = false;         //在本补丁内暂时禁用性别模糊
                 }
 
                 _taiwuActorId = DateFile.instance.MianActorID();
@@ -186,7 +186,7 @@ namespace GenderControl.GenderControl.ModFunctions
         }
 
         /// <summary>
-        /// 对 PeopleLifeAI 下的 AISetChildren （NPC怀孕设置）进行 前置补丁
+        /// 怀孕判定调用前，还原性别模糊的NeedPatch
         /// </summary>
         [HarmonyPostfix]
         private static void AISetChildrenPostfix(int fatherId, int motherId)

@@ -7,8 +7,13 @@ using GameData;
 using HarmonyLib;
 using BepInEx.Logging;
 
+#if DEBUG
 namespace GenderControl
 {
+    //版本v0.2.0前，由于父母双方性别不一定正好为父方->男、母方->女，导致在原方法中婴儿的BaseActorId的计算异常
+    //（婴儿的BaseActorId不一定和父母方所在地域一致、且有可能导致数据范围超限的问题。婴儿BaseActorId的合法范围为1～32。而BUG时会出现0、33的情况）
+    //版本v0.2.0已修正。
+
     /// <summary>
     /// DeBug用：传出婴儿降生时的父母双方数据
     /// </summary>
@@ -20,8 +25,8 @@ namespace GenderControl
         /// <summary>
         /// DateFile 实例类中 MakeNewChildren 方法的 Prefix 前置补丁（不执行原方法）
         /// </summary>
-        /// <param name="__instance">DateFile类的当前实例，用来替代原代码中的“this.”</param>
-        /// <param name="__result">替代原方法返回的新生儿的最终属性</param>
+        /// <param name="__instance">原方法的当前实例</param>
+        /// <param name="__result">替代原方法返回的新生儿列表</param>
         /// <param name="fatherId">父亲人物ID</param>
         /// <param name="motherId">母亲人物ID</param>
         /// <param name="setFather">是否添加父亲关系</param>
@@ -30,7 +35,6 @@ namespace GenderControl
         /// <param name="gongLevel">所属门派阶级</param>
         /// <param name="baseActorId">基础人物ID，无父无母需要</param>
         /// <param name="childrenValue">孩子精纯数据列表</param>
-        /// <returns>是否在补丁执行完后，不跳过执行原方法（本补丁为“false”）</returns>
         [HarmonyPostfix]
         private static void MakeNewChildrenPrefixReport(int fatherId, int motherId)
         //原方法的声明
@@ -162,3 +166,4 @@ namespace GenderControl
         }
     }
 }
+#endif

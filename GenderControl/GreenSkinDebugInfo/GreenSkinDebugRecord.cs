@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 using HarmonyLib;
 using BepInEx.Logging;
 
+#if DEBUG
 namespace GenderControl
 {
+    //早期用来查看各项功能是否生效用的。不然心里比较没底
+
     /// <summary>
     /// LogInfo输出同性NPC之间，表白成功几率
     /// </summary>
@@ -128,3 +131,4 @@ namespace GenderControl
         }
     }
 }
+#endif

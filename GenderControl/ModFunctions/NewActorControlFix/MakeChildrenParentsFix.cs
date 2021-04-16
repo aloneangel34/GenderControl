@@ -12,7 +12,7 @@ namespace GenderControl
     /// 用于修复因“生成人物性别相同，导致游戏在生成夫妻、并接着生成双方的孩子时，传入的父母双方ID为同一人”的问题
     /// </summary>
     [HarmonyPatch(typeof(DateFile), "MakeChildren")]
-    public static class NewActorMakeChildrenParentsFix
+    public static class MakeChildrenParentsFix
     {
         /// <summary>
         /// 用于修复因“生成人物性别相同，导致游戏在生成夫妻、并接着生成双方的孩子时，传入的父母双方ID为同一人”的问题

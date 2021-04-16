@@ -23,7 +23,7 @@ namespace GenderControl
     public class Main : BaseUnityPlugin
     {
         /// <summary>插件版本</summary>
-        public const string Version = "0.1.4";
+        public const string Version = "0.2.0";
         /// <summary>插件名字</summary>
         public const string ModDisplayName = "GenderControl/性别操控";
         /// <summary>插件ID</summary>
@@ -626,25 +626,6 @@ namespace GenderControl
                                                 onValueChanged = (bool value, Toggle tg) =>
                                                 {
                                                     Setting.newActorGenderLock.Value = 1;
-
-                                                    #region 暂时弃用
-
-                                                    /*
-                                                    //因为【开启性别锁时，若不同步开启“门派身份性限制解除”会导致无法晋升、缺少掌门的情况】
-                                                    //所以需要在开启性别锁的同时与其绑定
-                                                    try
-                                                    {
-                                                        //在本开关组件的上一级（开关组）的上一级（水平UI组）的上一级（自适应垂直UI组）的下一级中找 Name属性 为“性别解禁UI组”的组件“n”
-                                                        //在组件“n”的下一级中找 Name属性 为“性别解禁开关”的组件“m”
-                                                        //再将组件“m”的类型强制转换为TaiwuToggle，这样就可以将该开关的 isOn属性 设为true
-                                                        ((TaiwuToggle)((tg.Parent.Parent.Parent.Children.Find(n => n.Name == "主要功能UI组")).Children.Find(m => m.Name == "性别解禁开关"))).isOn = true;
-                                                    }
-                                                    catch (Exception ex)
-                                                    {
-                                                        Logger.LogError(ex);
-                                                    }
-                                                    */
-                                                    #endregion
                                                 },
                                                 Element = { PreferredSize = { 175 } }
                                             },
@@ -659,46 +640,11 @@ namespace GenderControl
                                                 onValueChanged = (bool value, Toggle tg) =>
                                                 {
                                                     Setting.newActorGenderLock.Value = 2;
-
-                                                    #region 暂时弃用
-
-                                                    /*
-                                                    //因为【开启性别锁时，若不同步开启“门派身份性限制解除”会导致无法晋升、缺少掌门的情况】
-                                                    //所以需要在开启性别锁的同时与其绑定
-                                                    try
-                                                    {
-                                                        //在本开关组件的上一级（开关组）的上一级（水平UI组）的上一级（自适应垂直UI组）的下一级中找 Name属性 为“性别解禁UI组”的组件“n”
-                                                        //在组件“n”的下一级中找 Name属性 为“性别解禁开关”的组件“m”
-                                                        //再将组件“m”的类型强制转换为TaiwuToggle，这样就可以将该开关的 isOn属性 设为true
-                                                        ((TaiwuToggle)((tg.Parent.Parent.Parent.Children.Find(n => n.Name == "主要功能UI组")).Children.Find(m => m.Name == "性别解禁开关"))).isOn = true;
-                                                    }
-                                                    catch (Exception ex)
-                                                    {
-                                                        Logger.LogError(ex);
-                                                    }
-                                                    */
-                                                    #endregion
                                                 },
                                                 Element = { PreferredSize = { 175 } }
                                             },
                                         }
                                     },
-                                    #region 大概翻了翻生生世世MOD，发现似乎并不与其冲突，作废
-                                    /*
-                                    //【开关：不锁定转世】
-                                    new TaiwuToggle()
-                                    {
-                                        Text = "不锁定转世",
-                                        isOn = Setting.newActorGenderLockExcludeSamsara.Value,
-                                        //当数值改变时（开关按钮）
-                                        onValueChanged = (bool value, Toggle tg) =>
-                                        {
-                                            Setting.newActorGenderLockExcludeSamsara.Value = value;
-                                        },
-                                        Element = { PreferredSize = { 175 } }
-                                    },
-                                    */
-                                    #endregion
                                 }
                             },
                             //【水平UI组：新人物异性面相、性取向开关】
@@ -793,35 +739,6 @@ namespace GenderControl
                                                 FontColor =  Color.white,
                                                 OnClick = (Button allRegion) =>
                                                 {
-                                                    #region 发现下面的代码在设定开关的同时，也会触发开关值变更的事件（OnValueChange）这里就弃用了
-                                                    /*
-                                                    //以一键记录重设每个开关项
-                                                    for (int i = 0; i < Setting.newActorInRegionCharmUp.Value.Length; i++)
-                                                    {
-                                                        Setting.newActorInRegionCharmUp.Value[i] = Settings.NextTimeAllRegionSetOn;
-                                                    }
-
-                                                    //以一键记录重设对应的BaseActorIds列表
-                                                    if(Settings.NextTimeAllRegionSetOn)
-                                                    {
-                                                        Settings.RegionCharmUpBaseActorIds.Clear(); //先清空
-
-                                                        //再重设
-                                                        //（本来15个地域，对应男女之后BaseActorID是1～30）
-                                                        //（但无量金刚宗特别一点，其额外采用了31、32，所以多循环一次）
-                                                        for (int i = 0; i < 16; i++)
-                                                        {
-                                                            Settings.RegionCharmUpBaseActorIds.Add(i);
-                                                            Settings.RegionCharmUpBaseActorIds.Add(i+1);
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        Settings.RegionCharmUpBaseActorIds.Clear(); //清空
-                                                    }
-                                                    */
-                                                    #endregion 
-
                                                     //根据“记录值”更新【地域组】内所有开关的“开启/关闭”状态
                                                     foreach (UnityUIKit.Core.ManagedGameObject item in allRegion.Parent.Parent.Children)
                                                     {
@@ -1557,33 +1474,6 @@ namespace GenderControl
                                                 FontColor =  Color.white,
                                                 OnClick = (Button allGang) =>
                                                 {
-                                                    #region 发现下面的代码在设定开关的同时，也会触发开关值变更的事件（OnValueChange）这里就弃用了
-                                                    /*
-                                                    //以一键记录重设每个开关项
-                                                    for (int i = 0; i < Setting.npcPassTurnCantChangeGang.Value.Length; i++)
-                                                    {
-                                                        Setting.npcPassTurnCantChangeGang.Value[i] = Settings.NextTimeAllGangSetOn;
-                                                    }
-
-                                                    //以一键记录重设对应的禁止脱离势力列表
-                                                    if(Settings.NextTimeAllGangSetOn)
-                                                    {
-                                                        Settings.CantChangeGangIds.Clear(); //先清空
-
-                                                        //再重设
-                                                        //（15个门派势力、外加太吾村共16个。跳过了ID0因为那是“无门无派”的势力ID）
-                                                        for (int i = 1; i <= 16; i++)
-                                                        {
-                                                            Settings.CantChangeGangIds.Add(i);
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        Settings.CantChangeGangIds.Clear(); //清空
-                                                    }
-                                                    */
-                                                    #endregion
-
                                                     //根据“记录值”更新【门派组】内所有开关的“开启/关闭”状态
                                                     foreach (UnityUIKit.Core.ManagedGameObject item in allGang.Parent.Parent.Children)
                                                     {
