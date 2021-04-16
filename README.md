@@ -1,13 +1,13 @@
 #Taiwu_mods_BIE
 #太吾绘卷游戏Mod BepInEx
 
-#GenderControl / 性别操控
-
 for The Scroll Of Taiwu v0.2.8.4
 对应游戏版本 v0.2.8.4
 
+#GenderControl / 性别操控
+
 #Functions / 功能：
-1. 模糊性别判定
+1. 模糊性别判定（可指定怀孕方）
 1. 解除门派/身份对性别的要求
 2. 新生人物性别锁定
 2. 新人物不出现 男生女相/女生男相
@@ -19,14 +19,32 @@ for The Scroll Of Taiwu v0.2.8.4
 #Release Site / 发布地址:
 https://bbs.nga.cn/read.php?tid=26301617
 
-Dependency / 前置MOD:
-YanCore 1.5.1.1
+#Dependency Mod / 前置MOD:
+* YanCore 1.5.1.1
 
 #UpdataLog / 更新日志:
-v0.1.0
-1. 最初发布版本
 
-v0.1.1
-1. 关闭部分LoggerDebug级记录
-2. 针对报告的“婴儿诞生时、新生人物修正补丁出异常”BUG做了一个特化的LoggerInfo级记录报告
+##v0.2.0 重要更新！（之前的所有 v0.1.x 版本都有严重BUG，请停止使用）
+* 增加一处“模糊性别判定”的作用领域
+* **修复婴儿的BaseActorID计算异常的问题**
+* 修复一处与YanLib对话事件的兼容问题(比如多彩生活MOD)
+* 部分代码清理
 
+##v0.1.4
+* 添加辅助功能：“怀孕方指定” 可以指定 有太吾参与时的怀孕方 和 异性NPC之间的怀孕方(仅在开启“模糊性别判定”功能后可用)
+* 修复“模糊性别判定”功能在关闭后依然生效的问题
+* UI界面调整
+
+##v0.1.3
+* 增加一处“模糊性别判定”的作用领域
+
+##v0.1.2
+* “模糊性别判定”功能 添加同性可“男媒女妁”的效果
+* Logger调整
+
+##v0.1.1
+* 关闭部分LoggerDebug级记录
+* 针对报告的“婴儿诞生时、新生人物修正补丁出异常”BUG做了一个特化的LoggerInfo级记录报告
+
+##v0.1.0
+* 最初发布版本

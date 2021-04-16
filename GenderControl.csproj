@@ -103,8 +103,10 @@
     <Compile Include="GenderControl\ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingNpcTurnChangeActions.cs" />
     <Compile Include="GenderControl\ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckEventTaiwuTryGetLover.cs" />
     <Compile Include="GenderControl\QuickLogger.cs" />
+    <None Include="LICENSE" />
     <None Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GenderControl\Settings.cs" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
