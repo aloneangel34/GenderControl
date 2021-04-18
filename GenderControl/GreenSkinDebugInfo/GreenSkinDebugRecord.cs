@@ -38,7 +38,7 @@ namespace GenderControl
                     ObscureGenderHarmony.NeedPacth = false;     //在本补丁内暂时禁用性别模糊
                 }
 
-                QuickLogger.Log(LogLevel.Info, "actorId1:{0},性别:{1} 尝试向 actorId2:{2},性别:{3} 表白。成功几率:{4}。性别模糊启用:{5}", actorId, DateFile.instance.GetActorDate(actorId, 14, false), loverId, DateFile.instance.GetActorDate(loverId, 14, false), __result, selfAntiGenderObscure) ;
+                QuickLogger.Log(LogLevel.Info, "actorId1:{0},性别:{1}尝试向 actorId2:{2},性别:{3}表白。成功几率:{4} NeedPacth:{5}", actorId, DateFile.instance.GetActorDate(actorId, 14, false), loverId, DateFile.instance.GetActorDate(loverId, 14, false), __result, selfAntiGenderObscure) ;
 
                 //若调用该补丁时，本MOD的性别模糊正处于实际启用
                 if (selfAntiGenderObscure)
@@ -119,7 +119,7 @@ namespace GenderControl
                     ObscureGenderHarmony.NeedPacth = false;     //在本补丁内暂时禁用性别模糊
                 }
 
-                QuickLogger.Log(LogLevel.Info, "fatherId:{0},性别:{1} 试图让 motherId:{2},性别:{3} 怀孕。是否成功:{4}。性别模糊启用:{5}", fatherId, DateFile.instance.GetActorDate(fatherId, 14, false), motherId, DateFile.instance.GetActorDate(motherId, 14, false), __result, selfAntiGenderObscure);
+                QuickLogger.Log(LogLevel.Info, "fatherId:{0},性别:{1}试图让 motherId:{2},性别:{3}怀孕。成功？:{4} NeedPacth:{5}", fatherId, DateFile.instance.GetActorDate(fatherId, 14, false), motherId, DateFile.instance.GetActorDate(motherId, 14, false), __result, selfAntiGenderObscure);
 
                 //若调用该补丁时，本MOD的性别模糊正处于实际启用
                 if (selfAntiGenderObscure)
