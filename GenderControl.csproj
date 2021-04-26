@@ -82,6 +82,7 @@
     <Compile Include="GenderControl\ModFunctions\DisplayFaceColor.cs" />
     <Compile Include="GenderControl\ModFunctions\NewActorControlFix\BabyBaseActorIdFixApply.cs" />
     <Compile Include="GenderControl\ModFunctions\NewActorControlFix\BabyBaseActorIdFixCalc.cs" />
+    <Compile Include="GenderControl\ModFunctions\NoBothPregnant.cs" />
     <Compile Include="GenderControl\ModFunctions\ObscureGenderNeedWorkingCheck\NeedInSetLoveSocial.cs" />
     <Compile Include="GenderControl\ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckMatchmakingActorWindows.cs" />
     <Compile Include="GenderControl\ModFunctions\ObscureGenderNeedWorkingCheck\NeedWorkingCheckMatchmakingOption.cs" />

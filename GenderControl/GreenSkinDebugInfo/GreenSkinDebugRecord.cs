@@ -10,6 +10,7 @@ using BepInEx.Logging;
 namespace GenderControl
 {
     //早期用来查看各项功能是否生效用的。不然心里比较没底
+    #if DEBUG
 
     /// <summary>
     /// LogInfo输出同性NPC之间，表白成功几率
@@ -130,4 +131,6 @@ namespace GenderControl
             }
         }
     }
+
+    #endif
 }

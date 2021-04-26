@@ -207,16 +207,36 @@ namespace GenderControl
 
                 Settings.PatchActorID = _recoverPatchActorId;   //行为主动方：还原
                 _isPrefixRun = false;                           //重置记录
-
             }
-            //若性别模糊选项值为true（一般所指的已启用是指NeedPatch，抱歉造成歧义），DEBUG开启，未实际运行，【汇报原方法的Patch列表】
-            else if (Main.Setting.debugMode.Value && Main.Setting.obscureGender.Value)
+            //在非预期被跳过“指定怀孕方”补丁时，【汇报原方法的HarmonyPatch列表】
+            else if (!NoBothPregnant.IsSkipped && Main.Setting.debugMode.Value && Main.Setting.obscureGender.Value)
             {
                 QuickLogger.Log(LogLevel.Warning, "用于指定怀孕方的前置补丁已被跳过 fatherId:{0} motherId{1}", fatherId, motherId);
                 var patch = Harmony.GetPatchInfo(typeof(PeopleLifeAI).GetMethod("AISetChildren"));
-                Main.Logger.LogDebug("Prefixes: " + patch.Prefixes);
-                Main.Logger.LogDebug("Owners: " + patch.Owners);
+
+                //对AISetChildren方法进行补丁的前置补丁列表
+                Main.Logger.LogDebug("PeopleLifeAI.AISetChildren 的所有前置补丁列表:");
+                for (int i = 0; i < patch.Prefixes.Count; i++)
+                {
+                    Main.Logger.LogDebug("补丁序号: " + patch.Prefixes[i].index);
+                    Main.Logger.LogDebug("所属HarmonyID: " + patch.Prefixes[i].owner);
+                    Main.Logger.LogDebug("优先级: " + patch.Prefixes[i].priority);
+                    Main.Logger.LogDebug("指定 before 个数: " + patch.Prefixes[i].before.Length);
+                    for (int j = 0; j < patch.Prefixes[i].before.Length; j++)
+                    {
+                        Main.Logger.LogDebug(patch.Prefixes[i].before[j]);
+                    }
+                    Main.Logger.LogDebug("指定 after 个数: " + patch.Prefixes[i].after.Length);
+                    for (int j = 0; j < patch.Prefixes[i].after.Length; j++)
+                    {
+                        Main.Logger.LogDebug(patch.Prefixes[i].after[j]);
+                    }
+                    Main.Logger.LogDebug("--------");
+                }
             }
+
+            //单独重置记录参数
+            NoBothPregnant.IsSkipped = false;
         }
     }
 }
