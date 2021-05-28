@@ -39,8 +39,17 @@ namespace GenderControl
                     //}
                     #endregion
 
-                    __result.Remove(1002);  //返回的列表中移除“石芯玉女1002”
-                    __result.Add(1001);     //返回的列表中添加“无根之人1001”
+                    //以原方法的返回值创建新的List<int>（避免浅复制导致数据连动——主要会影响到_actorsFeaturesCache里面去，就离谱）
+                    List<int> fixFeatureIds = new List<int>(__result);
+                    fixFeatureIds.Remove(1002); //新列表中移除“石芯玉女1002”
+                    fixFeatureIds.Add(1001);    //新列表中添加“无根之人1001”
+
+                    __result = fixFeatureIds;   //返回值设为新的列表（避免浅复制）
+
+                    #region 原代码段因浅复制会影响到_actorsFeaturesCache，导致后续获取的人物特性都被变更而弃用
+                    //__result.Remove(1002);  //返回的列表中移除“石芯玉女1002”
+                    //__result.Add(1001);     //返回的列表中添加“无根之人1001”
+                    #endregion
 
                     //因为“正在设置过月行动的NPC”性别被模糊为男性，需要对“NPC情难自已”的判断处理一下
                 }
@@ -55,8 +64,18 @@ namespace GenderControl
                     //}
                     #endregion
 
-                    __result.Remove(1001);  //返回的列表中移除“无根之人1001”
-                    __result.Add(1002);     //返回的列表中添加“石芯玉女1002”
+
+                    //以原方法的返回值创建新的List<int>（避免浅复制导致数据连动——主要会影响到_actorsFeaturesCache里面去，就离谱）
+                    List<int> fixFeatureIds = new List<int>(__result);
+                    fixFeatureIds.Remove(1001); //新列表中移除“无根之人1001”
+                    fixFeatureIds.Add(1002);    //新列表中添加“石芯玉女1002”
+
+                    __result = fixFeatureIds;   //返回值设为新的列表（避免浅复制）
+
+                    #region 原代码段因浅复制会影响到_actorsFeaturesCache，导致后续获取的人物特性都被变更而弃用
+                    //__result.Remove(1001);  //返回的列表中移除“无根之人1001”
+                    //__result.Add(1002);     //返回的列表中添加“石芯玉女1002”
+                    #endregion
                 }
                 //若尝试获取其他人物的特性则不对返回的列表作处理
             }
