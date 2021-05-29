@@ -7,6 +7,7 @@ using HarmonyLib;
 
 namespace GenderControl
 {
+#if false
     /// <summary>
     /// 性别模糊启用时机补充：太吾参加比武招亲奇遇
     /// </summary>
@@ -51,4 +52,5 @@ namespace GenderControl
             }
         }
     }
+#endif
 }
