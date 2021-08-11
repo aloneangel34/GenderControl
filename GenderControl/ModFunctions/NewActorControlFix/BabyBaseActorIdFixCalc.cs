@@ -59,17 +59,17 @@ namespace GenderControl
             if (setFather && fatherId > 0)
             {
                 //按照父方设置时：
-                //父方的性别为女性，【需要修正】
-                if (int.Parse(__instance.GetActorDate(fatherId, 14, false)) == 2)
+                //若父方的BaseActorID为偶数/双数（通常为女性），【需要修正】
+                if (int.Parse(__instance.GetActorDate(fatherId, 997, false)) % 2 == 0)
                 {
                     BabyBaseActorIdFixValue = -1;           //原方法计算出的baseActorId 需要 -1
 
                     if (Main.Setting.debugMode.Value)
                     {
-                        QuickLogger.Log(LogLevel.Info, "决定婴儿BaseActorID的父方（ID:{0}）其性别为女性，婴儿BaseActorID的修正值设为{1}。", fatherId, BabyBaseActorIdFixValue);
+                        QuickLogger.Log(LogLevel.Info, "决定婴儿BaseActorID的父方（ID:{0}）的BaseActorID为{1}（是偶数/双数）、其性别为{2}性，婴儿BaseActorID的修正值设为{3}。", fatherId, __instance.GetActorDate(fatherId, 997, false), (int.Parse(__instance.GetActorDate(fatherId, 14, false)) == 1) ? "1男" : "2女", BabyBaseActorIdFixValue);
                     }
                 }
-                //父方的性别为男性
+                //父方的BaseActorID为奇数/单数（通常为男性）
                 else
                 {
                     BabyBaseActorIdFixValue = 0;            //不用修正
@@ -79,17 +79,17 @@ namespace GenderControl
             else if (setMother && motherId > 0)
             {
                 //按照母方设置时：
-                //母方的性别为男性，【需要修正】
-                if (int.Parse(__instance.GetActorDate(motherId, 14, false)) == 1)
+                //若母方的BaseActorID为奇数/单数（通常为男性），【需要修正】
+                if (int.Parse(__instance.GetActorDate(motherId, 997, false)) % 2 == 1)
                 {
                     BabyBaseActorIdFixValue = 1;            //原方法计算出的baseActorId 需要 +1
 
                     if (Main.Setting.debugMode.Value)
                     {
-                        QuickLogger.Log(LogLevel.Info, "决定婴儿BaseActorID的母方（ID:{0}）其性别为男性，婴儿BaseActorID的修正值设为{1}。", motherId, BabyBaseActorIdFixValue);
+                        QuickLogger.Log(LogLevel.Info, "决定婴儿BaseActorID的母方（ID:{0}）的BaseActorID为{1}（是奇数/单数）、其性别为{2}性，婴儿BaseActorID的修正值设为{3}。", motherId, __instance.GetActorDate(motherId, 997, false), (int.Parse(__instance.GetActorDate(motherId, 14, false)) == 1) ? "1男" : "2女", BabyBaseActorIdFixValue); 
                     }
                 }
-                //母方的性别为女性
+                //母方的BaseActorID为偶数/双数（通常为女性）
                 else
                 {
                     BabyBaseActorIdFixValue = 0;            //不用修正

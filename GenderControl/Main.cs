@@ -23,7 +23,7 @@ namespace GenderControl
     public class Main : BaseUnityPlugin
     {
         /// <summary>插件版本</summary>
-        public const string Version = "0.2.3";
+        public const string Version = "0.2.4";
         /// <summary>插件名字</summary>
         public const string ModDisplayName = "GenderControl/性别操控";
         /// <summary>插件ID</summary>

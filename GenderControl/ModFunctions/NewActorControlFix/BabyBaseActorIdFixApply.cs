@@ -50,28 +50,32 @@ namespace GenderControl
 
                 //对婴儿的BaseActorId应用修正值
                 baseActorId += BabyBaseActorIdFixCalc.BabyBaseActorIdFixValue;
+            }
 
-                //若修正后的婴儿的BaseActorId不在 1～32 的范围内，【报错】
-                //（理论上来说，修正后的BaseActorId应该在 1～32 的范围内。因为只有婴儿才需要修正，而1～32是婴儿才会采用的BaseActorId）
-                if (baseActorId < 1 || baseActorId > 32)
+            //若（修正后的）婴儿的BaseActorId不在 1～32 的范围内，【报错】
+            //（理论上来说，修正后的BaseActorId应该在 1～32 的范围内。因为只有婴儿才需要修正，而1～32是婴儿才会采用的BaseActorId）
+            if (baseActorId < 1 || baseActorId > 32)
+            {
+                bool selfAntiGenderObscure = false;             //用于记录的参数
+
+                //若开始时，本MOD的性别模糊正处于实际启用
+                if (ObscureGenderHarmony.NeedPacth)
                 {
-                    bool selfAntiGenderObscure = false;             //用于记录的参数
+                    selfAntiGenderObscure = true;               //记录在开头已经改变了
+                    ObscureGenderHarmony.NeedPacth = false;     //在本补丁内暂时禁用性别模糊
+                }
 
-                    //若开始时，本MOD的性别模糊正处于实际启用
-                    if (ObscureGenderHarmony.NeedPacth)
-                    {
-                        selfAntiGenderObscure = true;               //记录在开头已经改变了
-                        ObscureGenderHarmony.NeedPacth = false;     //在本补丁内暂时禁用性别模糊
-                    }
+                QuickLogger.Log(LogLevel.Warning, "婴儿（修正后）的baseActorId:{0} 不在1～32的范围内，将在1～32中随机设置", baseActorId);
+                QuickLogger.Log(LogLevel.Warning, "修正值:{0} 父方ID:{1} 父方BaseActorId:{2} 父方性别:{3} 母方ID:{4}  母方BaseActorId:{5} 母方性别:{6}", BabyBaseActorIdFixCalc.BabyBaseActorIdFixValue, fatherId, DateFile.instance.GetActorDate(fatherId, 997, false), DateFile.instance.GetActorDate(fatherId, 14, false), motherId, DateFile.instance.GetActorDate(motherId, 997, false), DateFile.instance.GetActorDate(motherId, 14, false));
 
-                    QuickLogger.Log(LogLevel.Fatal, "婴儿修正后的baseActorId:{0} 不在1～32的范围内，出现非预期的严重错误，请联系MOD作者（最好附上日志文件）", baseActorId);
-                    QuickLogger.Log(LogLevel.Fatal, "修正值:{0} 父方ID:{1} 父方BaseActorId:{2} 父方性别:{3} 母方ID:{4}  母方BaseActorId:{5} 母方性别:{6}", BabyBaseActorIdFixCalc.BabyBaseActorIdFixValue, fatherId, DateFile.instance.GetActorDate(fatherId, 997, false), DateFile.instance.GetActorDate(fatherId, 14, false), motherId, DateFile.instance.GetActorDate(motherId, 997, false), DateFile.instance.GetActorDate(motherId, 14, false));
+                baseActorId = UnityEngine.Random.Range(1, 33);  //在1～32中随机（左闭右开，可以取到1、无法取到33）
 
-                    //若在开始时暂时禁用了性别模糊
-                    if (selfAntiGenderObscure)
-                    {
-                        ObscureGenderHarmony.NeedPacth = true;      //在结束时重新启用性别模糊
-                    }
+                QuickLogger.Log(LogLevel.Info, "随机设置之后、婴儿的baseActorId为:{0}", baseActorId);
+
+                //若在开始时暂时禁用了性别模糊
+                if (selfAntiGenderObscure)
+                {
+                    ObscureGenderHarmony.NeedPacth = true;      //在结束时重新启用性别模糊
                 }
             }
         }
